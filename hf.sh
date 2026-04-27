@@ -48,10 +48,12 @@ read -p "Select action: " action
 
 case $action in
     1)
-        npx hyperframes preview "$selected_project"
+        # Preview might need the lib path too
+        LD_LIBRARY_PATH=/usr/lib npx hyperframes preview "$selected_project"
         ;;
     2)
-        npx hyperframes render "$selected_project"
+        echo "Starting High-Performance Render (8 workers)..."
+        LD_LIBRARY_PATH=/usr/lib xvfb-run npx hyperframes render "$selected_project" --workers 8
         ;;
     *)
         echo "Cancelled."
