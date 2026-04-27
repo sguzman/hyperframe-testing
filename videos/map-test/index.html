@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #050505;
+        --color-map: #1a1a1a;
+        --color-red: #cc0000;
+        --color-gold: #ffcc00;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      /* Map Styling */
+      .map-svg {
+        width: 1400px;
+        height: 800px;
+      }
+
+      .country-base {
+        fill: var(--color-map);
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1;
+      }
+
+      .country-flood {
+        fill: var(--color-red);
+        opacity: 0.8;
+      }
+
+      /* Supply Line Styling */
+      .supply-line {
+        fill: none;
+        stroke: var(--color-gold);
+        stroke-width: 3;
+        stroke-dasharray: 10, 10;
+      }
+
+      /* City Label */
+      .city-label {
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        background: var(--color-bg);
+        padding: 4px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .city-point {
+        width: 12px;
+        height: 12px;
+        background: var(--color-text);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--color-text);
+      }
+
+      .massive-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 100px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <div style="z-index: 10; display: flex; flex-direction: column; align-items: flex-start; width: 1500px;">
+        
+        <h1 class="massive-title clip" id="title" style="margin-bottom: 40px;" data-start="0" data-duration="15" data-track-index="1">GEOPOLITICAL<br>INFLUENCE</h1>
+
+        <div style="position: relative; width: 1400px; height: 800px;">
+          <!-- Map SVG -->
+          <svg class="map-svg clip" viewBox="0 0 400 200" data-start="1" data-duration="14" data-track-index="2">
+            <defs>
+              <mask id="flood-mask">
+                <circle id="mask-circle" cx="80" cy="80" r="0" fill="white" />
+              </mask>
+            </defs>
+            
+            <!-- Minimalist Continent Silhouette (Simplified) -->
+            <path class="country-base" d="M30,120 L80,50 L150,40 L200,60 L250,50 L320,80 L350,150 L280,180 L200,160 L100,170 L30,120 Z" />
+            
+            <!-- Red Flood Layer -->
+            <path class="country-flood" mask="url(#flood-mask)" d="M30,120 L80,50 L150,40 L200,60 L250,50 L320,80 L350,150 L280,180 L200,160 L100,170 L30,120 Z" />
+
+            <!-- Supply Lines -->
+            <path id="line-1" class="supply-line" d="M80,80 Q150,60 220,100" />
+            <path id="line-2" class="supply-line" d="M80,80 Q100,130 180,150" />
+          </svg>
+
+          <!-- Cities -->
+          <div class="clip" style="top: 38%; left: 18%;" data-start="2" data-duration="13" data-track-index="3">
+            <div class="city-point"></div>
+            <div class="city-label" style="margin-left: 20px;">BASE ALPHA</div>
+          </div>
+
+          <div class="clip" style="top: 48%; left: 53%;" data-start="5" data-duration="10" data-track-index="4">
+            <div class="city-point"></div>
+            <div class="city-label" style="margin-left: 20px;">SECTOR 7</div>
+          </div>
+
+          <div class="clip" style="top: 73%; left: 43%;" data-start="7" data-duration="8" data-track-index="5">
+            <div class="city-point"></div>
+            <div class="city-label" style="margin-left: 20px;">LOGISTICS HUB</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Title reveal
+      tl.from("#title", { x: -100, opacity: 0, duration: 1.5, ease: "expo.out" }, 0.5);
+
+      // 1. "Ideological Flood" Animation
+      tl.to("#mask-circle", { r: 300, duration: 6, ease: "power2.inOut" }, 1.5);
+
+      // 2. Supply Lines Animation (Pulsing flow)
+      const lines = ["#line-1", "#line-2"];
+      lines.forEach((line, i) => {
+        const path = document.querySelector(line);
+        const length = path.getTotalLength();
+        gsap.set(path, { strokeDashoffset: length, strokeDasharray: length });
+        
+        // Draw the line in
+        tl.to(path, { strokeDashoffset: 0, duration: 2, ease: "power2.out" }, 4 + (i * 1.5));
+        
+        // Continuous flow effect (simulated by repeating a small offset shift)
+        // Note: Hyperframes requires deterministic repeats. 
+        // We'll just shift the offset over the remaining duration.
+        tl.to(path, { 
+          strokeDashoffset: -length * 2, 
+          duration: 8, 
+          ease: "none" 
+        }, 6 + (i * 1.5));
+      });
+
+      // 3. City point "pings"
+      tl.from(".city-point", { scale: 0, opacity: 0, duration: 0.5, stagger: 2, ease: "back.out(3)" }, 2);
+      tl.from(".city-label", { x: -20, opacity: 0, duration: 0.8, stagger: 2 }, 2.3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
