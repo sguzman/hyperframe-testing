@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #0a0a0a;
+        --color-accent: #cc0000;
+        --color-gray: #2d3748;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      /* Typography */
+      .massive-text {
+        font-size: 140px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        line-height: 0.9;
+      }
+
+      .chart-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 24px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        opacity: 0.6;
+        margin-top: 20px;
+      }
+
+      .hit-value {
+        font-size: 48px;
+        font-weight: 900;
+        background: var(--color-text);
+        color: var(--color-bg);
+        padding: 5px 20px;
+        margin-bottom: 10px;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        width: 1200px;
+        height: 600px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        gap: 40px;
+        padding-bottom: 50px;
+        border-bottom: 4px solid var(--color-gray);
+      }
+
+      .bar-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+      }
+
+      .bar {
+        width: 100%;
+        background: var(--color-gray);
+        position: relative;
+        transform-origin: bottom;
+      }
+
+      .bar.highlight {
+        background: var(--color-accent);
+      }
+
+      /* Background Decoration */
+      .bg-stripe {
+        position: absolute;
+        width: 100%;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.02);
+        transform: skewY(-5deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <div class="bg-stripe clip" style="top: 20%;"></div>
+      <div class="bg-stripe clip" style="top: 60%;"></div>
+
+      <div style="z-index: 10; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        
+        <h1 class="massive-text" id="main-title" style="margin-bottom: 100px;">DISTRIBUTION</h1>
+
+        <div class="chart-container">
+          <!-- Bar 1 -->
+          <div class="bar-wrapper clip" id="bw1" data-start="1" data-duration="9" data-track-index="1">
+            <div class="hit-value" id="v1">12%</div>
+            <div class="bar" id="b1" style="height: 120px;"></div>
+            <div class="chart-label">TYPE A</div>
+          </div>
+
+          <!-- Bar 2 -->
+          <div class="bar-wrapper clip" id="bw2" data-start="1.2" data-duration="8.8" data-track-index="2">
+            <div class="hit-value" id="v2">28%</div>
+            <div class="bar" id="b2" style="height: 280px;"></div>
+            <div class="chart-label">TYPE B</div>
+          </div>
+
+          <!-- Bar 3 (Highlight) -->
+          <div class="bar-wrapper clip" id="bw3" data-start="1.4" data-duration="8.6" data-track-index="3">
+            <div class="hit-value" id="v3" style="background: var(--color-accent); color: white;">75%</div>
+            <div class="bar highlight" id="b3" style="height: 450px;"></div>
+            <div class="chart-label" style="opacity: 1; color: var(--color-accent);">DOMINANT</div>
+          </div>
+
+          <!-- Bar 4 -->
+          <div class="bar-wrapper clip" id="bw4" data-start="1.6" data-duration="8.4" data-track-index="4">
+            <div class="hit-value" id="v4">42%</div>
+            <div class="bar" id="b4" style="height: 420px;"></div>
+            <div class="chart-label">TYPE D</div>
+          </div>
+
+          <!-- Bar 5 -->
+          <div class="bar-wrapper clip" id="bw5" data-start="1.8" data-duration="8.2" data-track-index="5">
+            <div class="hit-value" id="v5">18%</div>
+            <div class="bar" id="b5" style="height: 180px;"></div>
+            <div class="chart-label">TYPE E</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Title reveal
+      tl.from("#main-title", { y: 50, opacity: 0, duration: 1, ease: "expo.out" }, 0.5);
+
+      // Bars growth
+      tl.from(".bar", { 
+        scaleY: 0, 
+        duration: 1.5, 
+        stagger: 0.1, 
+        ease: "expo.out" 
+      }, 1);
+
+      // Value "hit" reveal
+      tl.from(".hit-value", { 
+        y: 20, 
+        opacity: 0, 
+        duration: 0.6, 
+        stagger: 0.1, 
+        ease: "back.out(1.7)" 
+      }, 1.5);
+
+      // Label fade in
+      tl.from(".chart-label", { 
+        opacity: 0, 
+        duration: 1, 
+        stagger: 0.1 
+      }, 1.8);
+
+      // Highlight pulse (subtle zoom on the dominant bar)
+      tl.to("#bw3", { scale: 1.05, duration: 1, ease: "power2.inOut", repeat: 5, yoyo: true }, 3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
