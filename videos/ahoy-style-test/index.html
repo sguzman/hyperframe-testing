@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-red: #c53030;
+        --color-sand: #d69e2e;
+        --color-steel: #4a5568;
+        --color-bg: #1a202c;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden;
+      }
+
+      .clip {
+        position: absolute;
+      }
+
+      /* Transitions */
+      .panel-wipe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: var(--color-red);
+        z-index: 100;
+        transform: translateX(-100%);
+      }
+
+      /* Typography */
+      .bold-title {
+        font-size: 240px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        line-height: 0.8;
+        text-align: center;
+      }
+
+      .sub-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: 60px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-top: 20px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* Icons */
+      .icon-container {
+        width: 600px;
+        height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .icon-svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+      }
+
+      /* Layouts */
+      .split-screen {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        height: 100%;
+      }
+
+      .split-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .split-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 100px;
+      }
+
+      .narrative-text {
+        font-size: 80px;
+        font-weight: 900;
+        text-transform: uppercase;
+        max-width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <!-- Transitions -->
+      <div id="wipe" class="panel-wipe clip" data-start="0" data-duration="15" data-track-index="99"></div>
+
+      <!-- Scene 1: Intro -->
+      <div id="scene-1" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div id="intro-bg" class="clip" style="inset: 0; background: var(--color-red);" data-start="0" data-duration="5" data-track-index="0"></div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <h1 class="bold-title" id="t1">ICONIC</h1>
+          <p class="sub-title" id="s1">DESIGN</p>
+        </div>
+      </div>
+
+      <!-- Scene 2: Narrative -->
+      <div id="scene-2" class="scene clip" data-start="5" data-duration="5" data-track-index="1">
+        <div id="narrative-bg" class="clip" style="inset: 0; background: var(--color-sand);" data-start="5" data-duration="5" data-track-index="0"></div>
+        <div class="split-screen">
+          <div class="split-left">
+            <div class="icon-container" id="icon-1">
+              <!-- Simplified Rifle Silhouette SVG -->
+              <svg class="icon-svg" viewBox="0 0 100 40">
+                <path d="M5,25 L30,25 L35,15 L70,15 L75,20 L95,20 L95,25 L75,25 L70,35 L35,35 L30,25 Z M40,25 L65,25 L65,30 L40,30 Z" />
+              </svg>
+            </div>
+          </div>
+          <div class="split-right">
+            <p class="narrative-text" id="n1">BUILT FOR<br>UTILITY</p>
+            <p class="sub-title" id="n2" style="font-size: 40px; margin-top: 10px;">RELIABLE IN ANY CLIMATE</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Outro -->
+      <div id="scene-3" class="scene clip" data-start="10" data-duration="5" data-track-index="1">
+        <div id="outro-bg" class="clip" style="inset: 0; background: var(--color-steel);" data-start="10" data-duration="5" data-track-index="0"></div>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <h1 class="bold-title" id="t2">RELIABILITY</h1>
+          <p class="sub-title" id="s2">BEYOND MEASURE</p>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // --- Scene 1 Animations ---
+      tl.from("#t1", { scale: 1.5, opacity: 0, duration: 1.2, ease: "expo.out" }, 0.5);
+      tl.from("#s1", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, 1);
+      
+      // Wipe Out Scene 1
+      tl.to("#wipe", { x: "0%", duration: 0.5, ease: "power4.in" }, 4.5);
+      tl.set("#wipe", { backgroundColor: "#d69e2e" }, 5);
+      tl.to("#wipe", { x: "100%", duration: 0.5, ease: "power4.out" }, 5);
+
+      // --- Scene 2 Animations ---
+      tl.from("#icon-1", { x: -200, opacity: 0, duration: 1.5, ease: "expo.out" }, 5.5);
+      tl.from("#n1", { x: 100, opacity: 0, duration: 1.2, ease: "expo.out" }, 5.8);
+      tl.from("#n2", { x: 50, opacity: 0, duration: 1, ease: "power3.out" }, 6.2);
+
+      // Wipe Out Scene 2
+      tl.to("#wipe", { x: "0%", duration: 0.5, ease: "power4.in" }, 9.5);
+      tl.set("#wipe", { backgroundColor: "#4a5568" }, 10);
+      tl.to("#wipe", { x: "-100%", duration: 0.5, ease: "power4.out" }, 10);
+
+      // --- Scene 3 Animations ---
+      tl.from("#t2", { opacity: 0, duration: 1, ease: "power2.inOut" }, 10.5);
+      tl.to("#t2", { scale: 1.1, duration: 4.5, ease: "none" }, 10.5);
+      tl.from("#s2", { opacity: 0, y: -20, duration: 1, ease: "power3.out" }, 11.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
