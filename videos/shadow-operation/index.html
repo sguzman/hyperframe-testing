@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-blue: #219EBC;
+        --color-dark: #023047;
+        --color-accent: #FFB703;
+        --color-danger: #FB8500;
+        --color-bg: #000;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: var(--color-bg);
+        font-family: 'Space Grotesk', sans-serif;
+        color: white;
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .scene { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; visibility: hidden; }
+      .clip { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+      /* TYPOGRAPHY */
+      .massive-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 240px;
+        line-height: 0.8;
+        letter-spacing: -10px;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .label-box {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 40px;
+        background: white;
+        color: black;
+        padding: 10px 40px;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        display: inline-block;
+      }
+      .narrative {
+        font-size: 30px;
+        letter-spacing: 10px;
+        text-transform: uppercase;
+        opacity: 0.6;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      /* POST-PROCESS */
+      #scanlines {
+        z-index: 1000;
+        pointer-events: none;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP7F6VAAAAD0lEQVR42mNkYGA4wMAAAAYAAp36Z8AAAAAASUVORK5CYII=');
+        background-size: 100% 4px;
+        opacity: 0.15;
+        mix-blend-mode: overlay;
+      }
+      #damage-canvas { z-index: 1010; pointer-events: none; }
+      #vignette {
+        z-index: 1020;
+        background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+        pointer-events: none;
+      }
+
+      /* WIPE TRANSITION */
+      .wipe {
+        position: absolute; width: 100%; height: 100%;
+        z-index: 500; background: var(--color-blue);
+        transform: translateY(-100%);
+      }
+
+      /* SCORCH MASK */
+      #scorch-overlay {
+        z-index: 900; background: black;
+        -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      
+      <!-- GLOBAL OVERLAYS -->
+      <div id="scanlines" class="clip"></div>
+      <canvas id="damage-canvas" width="1920" height="1080" class="clip"></canvas>
+      <div id="vignette" class="clip"></div>
+      <div id="wipe-v" class="wipe"></div>
+
+      <!-- SCENE 1: THE MISSION (0-10s) -->
+      <div id="scene-1" class="scene clip" data-start="0" data-duration="10" style="visibility: visible;">
+          <div id="scorch-overlay" class="clip"></div>
+          <div style="text-align: center;">
+            <h1 class="massive-title" id="t1">SHADOW<br>OPS</h1>
+            <p class="narrative" id="p1">AUTHORIZED ACCESS ONLY</p>
+          </div>
+      </div>
+
+      <!-- SCENE 2: THE TARGET (10-22s) -->
+      <div id="scene-2" class="scene clip" data-start="10" data-duration="12" style="background: var(--color-dark);">
+          <div id="blueprint-bg" class="clip" style="opacity: 0.2;">
+             <svg width="100%" height="100%">
+                <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                    <path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" stroke-width="0.5"/>
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+             </svg>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+             <div class="label-box" id="l2">TARGET_ALPHA</div>
+             <svg width="600" height="400" style="margin: 50px 0; stroke: var(--color-blue); stroke-width: 2; fill: none;">
+                <rect id="rect-anim" x="150" y="50" width="300" height="300" />
+                <circle id="circ-anim" cx="300" cy="200" r="100" stroke-dasharray="10 10" />
+                <path d="M0,200 L600,200 M300,0 L300,400" opacity="0.3" />
+             </svg>
+             <p class="narrative">STRUCTURAL VULNERABILITY DETECTED</p>
+          </div>
+      </div>
+
+      <!-- SCENE 3: THE MAP (22-35s) -->
+      <div id="scene-3" class="scene clip" data-start="22" data-duration="13" style="background: #2a9d8f;">
+          <div id="map-container" style="transform: scale(1.5);">
+             <!-- Simplified Tactical Map -->
+             <svg width="1200" height="800" viewBox="0 0 1200 800">
+                <path d="M100,100 L300,150 L500,100 L800,200 L1100,150 L1000,500 L700,600 L400,550 L100,400 Z" fill="#264653" />
+                <circle id="point-a" cx="300" cy="300" r="10" fill="#e76f51" />
+                <path id="route" d="M1100,700 L800,500 L500,400 L300,300" stroke="white" stroke-width="4" stroke-dasharray="10 10" fill="none" />
+             </svg>
+          </div>
+          <div class="clip" style="top: 800px; left: 100px; width: 400px;">
+             <div class="label-box" style="background: #e76f51; color: white;">ROUTE_PLAN</div>
+             <p class="narrative" style="text-align: left; opacity: 1;">INFILTRATION: NORTH-EAST</p>
+          </div>
+      </div>
+
+      <!-- SCENE 4: VARIABLES (35-48s) -->
+      <div id="scene-4" class="scene clip" data-start="35" data-duration="13" style="background: #e9c46a;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 40px;">
+             <h1 class="massive-title" style="color: #264653; font-size: 150px;">CRITICAL<br>VARIABLES</h1>
+             <div id="var-list" style="display: flex; gap: 20px;">
+                <div class="label-box v-item">WIND_SPEED</div>
+                <div class="label-box v-item">VISIBILITY</div>
+                <div class="label-box v-item">SIGNAL_JAM</div>
+             </div>
+          </div>
+      </div>
+
+      <!-- SCENE 5: EXECUTION (48-60s) -->
+      <div id="scene-5" class="scene clip" data-start="48" data-duration="12" style="background: #000;">
+          <div style="text-align: center;">
+             <h1 class="massive-title" id="final-t" style="color: var(--color-danger);">EXECUTE</h1>
+             <p class="narrative" style="color: var(--color-accent);">NO TURNING BACK</p>
+          </div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const canvas = document.getElementById('damage-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // --- GLOBAL: SCANLINES & DAMAGE ---
+      tl.to("#scanlines", { backgroundPosition: "0 100px", duration: 60, ease: "none" }, 0);
+      const damageProxy = { frame: 0 };
+      tl.to(damageProxy, {
+        frame: 1800, duration: 60, ease: "none",
+        onUpdate: () => {
+            ctx.clearRect(0, 0, 1920, 1080);
+            ctx.fillStyle = "rgba(0,0,0,0.4)";
+            ctx.strokeStyle = "rgba(0,0,0,0.3)";
+            for(let i=0; i<2; i++) {
+                ctx.beginPath(); ctx.arc(Math.random()*1920, Math.random()*1080, 1.5, 0, Math.PI*2); ctx.fill();
+            }
+            if(Math.random() > 0.9) {
+                ctx.beginPath(); const x = Math.random()*1920; ctx.moveTo(x, 0); ctx.lineTo(x+(Math.random()-0.5)*10, 1080); ctx.stroke();
+            }
+        }
+      }, 0);
+
+      // --- SCENE 1: THE MISSION ---
+      tl.from("#t1", { scale: 0.8, opacity: 0, duration: 2, ease: "expo.out" }, 1);
+      tl.from("#p1", { y: 20, opacity: 0, duration: 1.5 }, 2);
+      // Scorch Away reveal of scene 1 content (Actually, reveal of scene 2)
+      tl.to("#scorch-overlay", {
+          onUpdate: function() {
+              const p = this.progress() * 100;
+              document.getElementById('scorch-overlay').style.webkitMaskImage = `radial-gradient(circle, transparent ${p}%, black ${p+10}%)`;
+          },
+          duration: 4, ease: "power2.in"
+      }, 0);
+
+      // Transition 1 (Wipe to Blue)
+      tl.to("#wipe-v", { y: "0%", duration: 0.6, ease: "power4.in" }, 9.4);
+      tl.set("#scene-2", { visibility: "visible" }, 10);
+      tl.to("#wipe-v", { y: "100%", duration: 0.6, ease: "power4.out" }, 10);
+
+      // --- SCENE 2: THE TARGET ---
+      tl.from("#l2", { x: -100, opacity: 0, duration: 1 }, 10.5);
+      tl.from("#rect-anim", { strokeDasharray: "0 1000", duration: 2 }, 11);
+      tl.from("#circ-anim", { opacity: 0, scale: 0.5, duration: 1.5, ease: "back.out" }, 12);
+      tl.to("#scene-2", { scale: 1.1, duration: 12, ease: "none" }, 10);
+
+      // Transition 2 (Horizontal Wipe)
+      tl.set("#wipe-v", { transform: "translateX(-100%)", y: 0, backgroundColor: "#2a9d8f" }, 21.4);
+      tl.to("#wipe-v", { x: "0%", duration: 0.6, ease: "power4.in" }, 21.4);
+      tl.set("#scene-3", { visibility: "visible" }, 22);
+      tl.to("#wipe-v", { x: "100%", duration: 0.6, ease: "power4.out" }, 22);
+
+      // --- SCENE 3: THE MAP ---
+      tl.from("#map-container", { scale: 2, duration: 13, ease: "sine.inOut" }, 22);
+      tl.from("#route", { strokeDashoffset: 1000, strokeDasharray: "1000", duration: 4, ease: "power1.inOut" }, 24);
+      tl.from("#point-a", { scale: 0, duration: 1, ease: "back.out(4)" }, 28);
+
+      // Transition 3 (Wipe to Yellow)
+      tl.set("#wipe-v", { transform: "translateY(100%)", x: 0, backgroundColor: "#e9c46a" }, 34.4);
+      tl.to("#wipe-v", { y: "0%", duration: 0.6, ease: "power4.in" }, 34.4);
+      tl.set("#scene-4", { visibility: "visible" }, 35);
+      tl.to("#wipe-v", { y: "-100%", duration: 0.6, ease: "power4.out" }, 35);
+
+      // --- SCENE 4: VARIABLES ---
+      tl.from("#scene-4 h1", { skewX: -20, opacity: 0, duration: 1 }, 35.5);
+      tl.from(".v-item", { scale: 0, opacity: 0, duration: 0.5, stagger: 0.2, ease: "back.out" }, 37);
+
+      // Transition 4 (Flash to Black)
+      tl.to("#root", { backgroundColor: "#fff", duration: 0.1 }, 47.9);
+      tl.set("#scene-5", { visibility: "visible" }, 48);
+      tl.to("#root", { backgroundColor: "#000", duration: 0.5 }, 48);
+
+      // --- SCENE 5: EXECUTION ---
+      tl.from("#final-t", { scale: 2, filter: "blur(20px)", opacity: 0, duration: 1.5, ease: "expo.out" }, 48.5);
+      tl.to("#final-t", { color: "white", repeat: 5, yoyo: true, duration: 0.1 }, 50);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
