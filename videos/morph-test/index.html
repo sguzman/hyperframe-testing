@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-gold: #ffcc00;
+        --color-red: #cc0000;
+        --color-bg: #0a0a0a;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      .icon-container {
+        width: 600px;
+        height: 600px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .icon {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      svg {
+        width: 500px;
+        height: 500px;
+      }
+
+      .massive-text {
+        font-size: 100px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+        text-align: center;
+      }
+
+      .description {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 32px;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        margin-top: 40px;
+        opacity: 0.6;
+      }
+
+      /* Metaphorical Color Shift */
+      .gold-text { color: var(--color-gold); }
+      .red-text { color: var(--color-red); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        
+        <div class="icon-container clip" data-start="0" data-duration="10" data-track-index="1">
+          <!-- Icon 1: Dollar Sign -->
+          <div class="icon" id="icon1">
+            <svg viewBox="0 0 100 100" fill="var(--color-gold)">
+              <path d="M50 5 L50 95 M35 25 Q35 15 50 15 Q65 15 65 25 Q65 35 50 35 Q35 35 35 45 Q35 55 50 55 Q65 55 65 65 Q65 75 50 75 Q35 75 35 65" stroke="var(--color-gold)" stroke-width="8" fill="none" />
+            </svg>
+          </div>
+
+          <!-- Icon 2: Shield -->
+          <div class="icon" id="icon2" style="opacity: 0; visibility: hidden;">
+            <svg viewBox="0 0 100 100" fill="var(--color-red)">
+              <path d="M10 20 L50 5 L90 20 L90 60 Q90 85 50 95 Q10 85 10 60 Z" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="clip" style="top: 750px; text-align: center;" data-start="0" data-duration="10" data-track-index="2">
+          <div id="text1">
+            <h1 class="massive-text gold-text">INVESTMENT</h1>
+            <p class="description">INITIAL CAPITAL</p>
+          </div>
+          <div id="text2" style="opacity: 0; visibility: hidden; position: absolute; top: 0; width: 100%;">
+            <h1 class="massive-text red-text">PROTECTION</h1>
+            <p class="description red-text">ASSET SECURITY</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Scene 1 Reveal
+      tl.from("#icon1", { scale: 0.5, opacity: 0, duration: 1.5, ease: "expo.out", overwrite: "auto" }, 0.5);
+      tl.from("#text1", { y: 30, opacity: 0, duration: 1, ease: "power2.out" }, 1);
+
+      // 2. THE MORPH (Blur Dissolve Technique)
+      // Phase A: Blur and swell
+      tl.to("#icon1", { 
+        filter: "blur(40px)", 
+        scale: 1.2, 
+        duration: 0.8, 
+        ease: "power2.in",
+        overwrite: "auto"
+      }, 4);
+      
+      tl.to("#text1", { 
+        filter: "blur(20px)", 
+        opacity: 0, 
+        duration: 0.5 
+      }, 4.2);
+
+      // Phase B: Cross-fade
+      tl.set("#icon1", { visibility: "hidden" }, 4.8);
+      tl.set("#icon2", { visibility: "visible" }, 4.8);
+      tl.set("#text1", { visibility: "hidden" }, 4.8);
+      tl.set("#text2", { visibility: "visible" }, 4.8);
+
+      tl.fromTo("#icon2", 
+        { filter: "blur(40px)", scale: 0.8, opacity: 0 },
+        { filter: "blur(40px)", scale: 1.2, opacity: 1, duration: 0.2, overwrite: "auto" }, 
+        4.8
+      );
+
+      // Phase C: Sharpen and settle
+      tl.to("#icon2", { 
+        filter: "blur(0px)", 
+        scale: 1, 
+        duration: 1, 
+        ease: "expo.out",
+        overwrite: "auto"
+      }, 5);
+
+      tl.to("#text2", { 
+        filter: "blur(0px)", 
+        opacity: 1, 
+        duration: 0.8,
+        overwrite: "auto"
+      }, 5.2);
+
+      // Subtle rotation for both
+      tl.to("#icon1", { rotation: 10, duration: 4, ease: "none", overwrite: "auto" }, 0);
+      tl.fromTo("#icon2", { rotation: -10 }, { rotation: 0, duration: 5, ease: "power1.out", overwrite: "auto" }, 5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
