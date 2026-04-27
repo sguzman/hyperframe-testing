@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Bungee&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1a1a2e;
+        --color-text: #ffffff;
+        --palette-1: #ff007f; /* Magenta */
+        --palette-2: #00f2ff; /* Cyan */
+        --palette-3: #70ff00; /* Lime */
+        --palette-4: #ffcc00; /* Gold */
+        --palette-5: #ff5e00; /* Orange */
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      #map-svg {
+        width: 1500px;
+        height: 900px;
+      }
+
+      .map-feature {
+        stroke: rgba(255, 255, 255, 0.4);
+        stroke-width: 2;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      }
+
+      .massive-title {
+        font-family: 'Bungee', cursive;
+        font-size: 150px;
+        text-transform: uppercase;
+        color: var(--palette-2);
+        -webkit-text-stroke: 4px white;
+        paint-order: stroke fill;
+        text-shadow: 10px 10px 0px var(--palette-1);
+      }
+
+      .bouncy-label {
+        font-family: 'Bungee', cursive;
+        font-size: 30px;
+        background: white;
+        color: var(--color-bg);
+        padding: 10px 20px;
+        border-radius: 50px;
+        box-shadow: 0 10px 0px var(--palette-4);
+      }
+
+      /* Floating particles */
+      .particle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <!-- Background Particles -->
+      <div id="particles"></div>
+
+      <div style="z-index: 10; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        
+        <h1 class="massive-title clip" id="main-title" style="top: 50px;" data-start="0.5" data-duration="14.5" data-track-index="1">PLAY BALL!</h1>
+
+        <div style="position: relative; margin-top: 150px;">
+          <svg id="map-svg" class="clip" data-start="1" data-duration="14" data-track-index="2">
+            <g id="map-g"></g>
+          </svg>
+
+          <div id="callouts"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const colors = ['#ff007f', '#00f2ff', '#70ff00', '#ffcc00', '#ff5e00'];
+
+      // 1. Title Bounce
+      tl.from("#main-title", { 
+        y: -300, 
+        rotation: -10, 
+        scale: 0.5, 
+        opacity: 0, 
+        duration: 2, 
+        ease: "elastic.out(1, 0.5)" 
+      }, 0.5);
+
+      // 2. Background Particles
+      for(let i=0; i<20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle clip';
+        p.style.background = colors[i % colors.length];
+        p.style.left = (200 + (i * 80)) + 'px';
+        p.style.top = (200 + (Math.sin(i) * 300)) + 'px';
+        document.querySelector("#particles").appendChild(p);
+        
+        tl.from(p, { 
+          scale: 0, 
+          opacity: 0, 
+          duration: 1, 
+          ease: "back.out(2)" 
+        }, 1 + (i * 0.1));
+        
+        tl.to(p, { 
+          y: "+=50", 
+          duration: 2, 
+          repeat: 6, 
+          yoyo: true, 
+          ease: "sine.inOut" 
+        }, 2 + (i * 0.1));
+      }
+
+      // 3. Map Logic
+      async function initMap() {
+        try {
+          const response = await fetch('assets/usa.geojson');
+          const data = await response.json();
+
+          const width = 1500;
+          const height = 900;
+
+          const projection = d3.geoAlbersUsa().fitSize([width, height], data);
+          const pathGenerator = d3.geoPath().projection(projection);
+
+          const g = d3.select("#map-g");
+
+          // Draw each feature separately for animation
+          // Note: ADM0 might only have 1 feature (the whole USA)
+          // Let's check if it has multiple polygons.
+          const feature = data.features[0];
+          
+          if (feature.geometry.type === "MultiPolygon") {
+            // We'll treat each polygon as a separate piece to make it "playful"
+            const polygons = feature.geometry.coordinates;
+            
+            polygons.forEach((poly, idx) => {
+              // Create a dummy feature for this polygon
+              const dummyFeature = {
+                type: "Feature",
+                geometry: { type: "Polygon", coordinates: poly }
+              };
+              
+              const pStr = pathGenerator(dummyFeature);
+              if(!pStr) return;
+
+              const path = g.append("path")
+                .attr("class", "map-feature")
+                .attr("id", "poly-" + idx)
+                .attr("d", pStr)
+                .attr("fill", colors[idx % colors.length]);
+
+              // Bounce in animation
+              tl.from("#poly-" + idx, {
+                scale: 0,
+                opacity: 0,
+                transformOrigin: "50% 50%",
+                duration: 1.5,
+                ease: "elastic.out(1, 0.3)"
+              }, 1.5 + (idx * 0.02)); // Rapid stagger
+            });
+          } else {
+            // Standard single path
+            g.append("path")
+              .attr("class", "map-feature")
+              .attr("id", "usa-main")
+              .attr("d", pathGenerator(data))
+              .attr("fill", colors[0]);
+
+            tl.from("#usa-main", {
+              scale: 0,
+              opacity: 0,
+              transformOrigin: "50% 50%",
+              duration: 2,
+              ease: "elastic.out(1, 0.3)"
+            }, 1.5);
+          }
+
+          // 4. Bouncy Labels
+          const cities = [
+            { name: "FUN ZONE", coords: [-77.0369, 38.9072], start: 4 },
+            { name: "PARTY NY", coords: [-74.0060, 40.7128], start: 5 },
+            { name: "COOL LA", coords: [-118.2437, 34.0522], start: 6 }
+          ];
+
+          cities.forEach((city, idx) => {
+            const [x, y] = projection(city.coords);
+            if (x && y) {
+              const callout = document.createElement('div');
+              callout.className = 'clip';
+              callout.style.left = (x) + 'px';
+              callout.style.top = (y) + 'px';
+              callout.innerHTML = `<div class="bouncy-label" id="label-${idx}">${city.name}</div>`;
+              document.querySelector("#callouts").appendChild(callout);
+              
+              tl.from(`#label-${idx}`, { 
+                scale: 0, 
+                rotation: 20,
+                duration: 1.2, 
+                ease: "elastic.out(1, 0.5)" 
+              }, city.start);
+            }
+          });
+
+        } catch (e) {
+          console.error("Map Load Error:", e);
+        }
+      }
+
+      initMap();
+
+      // Subtle global wiggle
+      tl.to("#map-svg", { rotation: 2, duration: 2, repeat: 6, yoyo: true, ease: "sine.inOut" }, 2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
