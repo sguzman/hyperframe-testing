@@ -8,3 +8,4 @@ frame*.jpg
 .DS_Store
 help_utf8.txt
 node_modules
+renders
