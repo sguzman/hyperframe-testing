@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #050505;
+        --color-map: #1a1a1a;
+        --color-red: #cc0000;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      /* Map Styling */
+      #map-svg {
+        width: 1600px;
+        height: 1000px;
+      }
+
+      .map-path {
+        fill: var(--color-map);
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 1;
+      }
+
+      .map-flood {
+        fill: var(--color-red);
+        opacity: 0.8;
+      }
+
+      .massive-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 100px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        line-height: 0.85;
+      }
+
+      .label-box {
+        font-size: 18px;
+        font-weight: 900;
+        background: var(--color-bg);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 5px 12px;
+        text-transform: uppercase;
+      }
+
+      .point {
+        width: 10px;
+        height: 100%;
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <div style="z-index: 10; display: flex; flex-direction: column; align-items: flex-start; width: 1600px;">
+        
+        <h1 class="massive-title clip" id="main-title" style="margin-bottom: 20px;" data-start="0" data-duration="15" data-track-index="1">TERRITORIAL<br>EXPANSION</h1>
+
+        <div style="position: relative; width: 1600px; height: 900px;">
+          <svg id="map-svg" class="clip" data-start="1" data-duration="14" data-track-index="2">
+            <defs>
+              <mask id="flood-mask">
+                <circle id="mask-circle" cx="300" cy="500" r="0" fill="white" />
+              </mask>
+            </defs>
+            <g id="map-g"></g>
+          </svg>
+
+          <!-- City Callouts (Positioned dynamically in JS later) -->
+          <div id="callouts"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Title reveal
+      tl.from("#main-title", { x: -50, opacity: 0, duration: 1.5, ease: "expo.out" }, 0.5);
+
+      // Map Loading and Rendering
+      async function initMap() {
+        try {
+          const response = await fetch('assets/usa.geojson');
+          const data = await response.json();
+
+          const width = 1600;
+          const height = 900;
+
+          // Use Albers USA projection (perfect for US maps)
+          const projection = d3.geoAlbersUsa()
+            .fitSize([width, height], data);
+
+          const pathGenerator = d3.geoPath().projection(projection);
+
+          const g = d3.select("#map-g");
+
+          // Draw Base Map
+          g.selectAll(".map-path.base")
+            .data(data.features)
+            .enter()
+            .append("path")
+            .attr("class", "map-path base")
+            .attr("d", pathGenerator);
+
+          // Draw Flood Layer (Masked)
+          g.selectAll(".map-path.flood")
+            .data(data.features)
+            .enter()
+            .append("path")
+            .attr("class", "map-path flood")
+            .attr("mask", "url(#flood-mask)")
+            .attr("d", pathGenerator);
+
+          // Animate the mask circle
+          tl.to("#mask-circle", { r: 1800, duration: 8, ease: "power2.inOut" }, 2);
+
+          // Add City Callouts (Examples)
+          const cities = [
+            { name: "DC", coords: [-77.0369, 38.9072], start: 3 },
+            { name: "NY", coords: [-74.0060, 40.7128], start: 4 },
+            { name: "LA", coords: [-118.2437, 34.0522], start: 6 }
+          ];
+
+          cities.forEach(city => {
+            const [x, y] = projection(city.coords);
+            if (x && y) {
+              const callout = document.createElement('div');
+              callout.className = 'clip';
+              callout.style.left = (x) + 'px';
+              callout.style.top = (y) + 'px';
+              callout.innerHTML = `<div class="label-box" id="label-${city.name}">${city.name}</div>`;
+              document.querySelector("#callouts").appendChild(callout);
+              
+              tl.from(`#label-${city.name}`, { 
+                scale: 0, 
+                opacity: 0, 
+                duration: 0.8, 
+                ease: "back.out(2)" 
+              }, city.start);
+            }
+          });
+
+        } catch (e) {
+          console.error("Map Load Error:", e);
+        }
+      }
+
+      initMap();
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
