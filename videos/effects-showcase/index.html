@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1D3557;
+        --color-line: rgba(255, 255, 255, 0.4);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: #000;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; }
+
+      /* BASE CONTENT (Blueprint) */
+      #base-content {
+        width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 50%, #457B9D, #1D3557);
+        display: flex; align-items: center; justify-content: center;
+        filter: url(#crt-bulge);
+      }
+
+      /* EFFECT: CRT Bulge (using SVG Displacement) */
+      /* Applied via CSS filter property */
+
+      /* EFFECT: CRT Scanlines */
+      #scanlines {
+        width: 100%; height: 100%;
+        background: repeating-linear-gradient(rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);
+        pointer-events: none;
+        z-index: 100;
+        opacity: 0.5;
+      }
+
+      /* EFFECT: Celluloid Damage (Dust/Scratches) */
+      #damage-overlay {
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 110;
+        mix-blend-mode: screen;
+      }
+
+      /* EFFECT: Scorch Mask */
+      #scorch-container {
+        width: 100%; height: 100%;
+        background: black;
+        z-index: 200;
+        mask-image: radial-gradient(circle, transparent 0%, black 100%);
+        -webkit-mask-image: radial-gradient(circle, transparent 0%, black 100%);
+        mask-size: 300% 300%;
+        mask-position: 50% 50%;
+      }
+
+      .title {
+        font-size: 120px; color: white; border: 10px solid white;
+        padding: 40px; text-transform: uppercase; letter-spacing: 20px;
+      }
+
+      /* SVG Filter Defs */
+      #svg-filters { width: 0; height: 0; position: absolute; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+      
+      <!-- LAYER 1: BASE (THE CONTENT TO BE PROCESSED) -->
+      <div id="base-content">
+          <div class="clip" style="width: 100%; height: 100%; border: 50px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div class="title">EFFECT LAB</div>
+            <div style="font-size: 40px; color: rgba(255,255,255,0.4); margin-top: 20px;">[ ARCHIVAL POST-PROCESSING ]</div>
+          </div>
+          <!-- Blueprint lines -->
+          <svg width="100%" height="100%" class="clip" style="stroke: rgba(255,255,255,0.2); fill: none;">
+            <circle r="400" cx="960" cy="540" stroke-dasharray="20 20" />
+            <line x1="0" y1="540" x2="1920" y2="540" stroke-dasharray="5 5" />
+            <line x1="960" y1="0" x2="960" y2="1080" stroke-dasharray="5 5" />
+          </svg>
+      </div>
+
+      <!-- LAYER 2: EFFECTS OVERLAYS -->
+      <div id="scanlines" class="clip"></div>
+      
+      <svg id="damage-overlay" class="clip">
+        <!-- Random dust/hair will be injected here via script -->
+      </svg>
+
+      <!-- LAYER 3: SCORCH REVEAL (BLACK CURTAIN THAT BURNS AWAY) -->
+      <div id="scorch-container" class="clip"></div>
+
+      <!-- UI LABELS -->
+      <div id="label-container" class="clip" style="top: 50px; left: 50px; font-size: 24px; color: #0f0; font-family: monospace;">
+        <div>ACTIVE_FILTERS: [<span id="filter-list">NONE</span>]</div>
+      </div>
+
+    </div>
+
+    <!-- SVG Filters for Bulge and Chromatic Aberration -->
+    <svg id="svg-filters">
+        <defs>
+            <!-- CRT BULGE -->
+            <filter id="crt-bulge">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="1" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+
+            <!-- CHROMATIC ABERRATION -->
+            <filter id="chroma">
+              <feColorMatrix in="SourceGraphic" type="matrix" 
+                values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+              <feColorMatrix in="SourceGraphic" type="matrix" 
+                values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+              <feColorMatrix in="SourceGraphic" type="matrix" 
+                values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+              <feOffset in="red" dx="4" dy="0" result="red-offset" />
+              <feOffset in="blue" dx="-4" dy="0" result="blue-offset" />
+              <feBlend in="red-offset" in2="green" mode="screen" result="rg" />
+              <feBlend in="rg" in2="blue-offset" mode="screen" />
+            </filter>
+        </defs>
+    </svg>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const filterLabel = document.getElementById('filter-list');
+
+      // 1. SCORCH FADE IN (0s - 4s)
+      tl.set("#scorch-container", { display: 'block' });
+      tl.to("#scorch-container", { 
+        maskSize: "0% 0%", 
+        duration: 4, 
+        ease: "power2.in",
+        onStart: () => filterLabel.innerText = "SCORCH_REVEAL"
+      }, 0);
+      tl.set("#scorch-container", { display: 'none' }, 4);
+
+      // 2. SEPIA TONE (4s - 8s)
+      tl.to("#base-content", { 
+        filter: "sepia(1) saturate(1.2) contrast(0.8) brightness(1.1) url(#crt-bulge)", 
+        duration: 0.5,
+        onStart: () => filterLabel.innerText = "SEPIA_TONE + CRT_BULGE"
+      }, 4);
+
+      // 3. CHROMATIC ABERRATION & SCANLINES (8s - 12s)
+      tl.to("#base-content", { 
+        filter: "url(#chroma) url(#crt-bulge)", 
+        duration: 0.5,
+        onStart: () => filterLabel.innerText = "CHROMATIC_ABERRATION"
+      }, 8);
+
+      // 4. CELLULOID DAMAGE (Starts at 12s)
+      const damageOverlay = document.getElementById('damage-overlay');
+      const createDamage = (time) => {
+          for(let i=0; i<5; i++) {
+            const x = Math.random() * 1920;
+            const y = Math.random() * 1080;
+            const size = Math.random() * 5;
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", x);
+            circle.setAttribute("cy", y);
+            circle.setAttribute("r", size);
+            circle.setAttribute("fill", "white");
+            circle.setAttribute("opacity", "0");
+            damageOverlay.appendChild(circle);
+            
+            tl.to(circle, { opacity: 0.8, duration: 0.05, repeat: 1, yoyo: true }, time + (Math.random() * 4.5));
+          }
+          // Scratches
+          for(let i=0; i<2; i++) {
+            const x = Math.random() * 1920;
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", 0);
+            line.setAttribute("x2", x + (Math.random() - 0.5) * 20);
+            line.setAttribute("y2", 1080);
+            line.setAttribute("stroke", "white");
+            line.setAttribute("stroke-width", "1");
+            line.setAttribute("opacity", "0");
+            damageOverlay.appendChild(line);
+            tl.to(line, { opacity: 0.5, duration: 0.05, repeat: 1, yoyo: true }, time + (Math.random() * 4.5));
+          }
+      };
+
+      createDamage(12);
+      tl.add(() => filterLabel.innerText = "CELLULOID_DAMAGE + SCANLINES", 12);
+
+      // 5. Final Combined Look (16s - 20s)
+      tl.to("#base-content", { 
+        filter: "sepia(0.5) url(#chroma) url(#crt-bulge) contrast(1.2)", 
+        duration: 1,
+        onStart: () => filterLabel.innerText = "FINAL_COMPOSITE"
+      }, 16);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
