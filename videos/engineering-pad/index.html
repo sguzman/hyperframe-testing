@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-paper: #FCFAF0; /* Classic off-white/buff paper */
+        --color-grid-cyan: #A2D2FF; /* Non-repro blue / Cyan */
+        --color-grid-cyan-light: #BDE0FE;
+        --color-accent: #219EBC;
+        --color-text: #023047;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: var(--color-paper);
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; }
+
+      /* The Engineering Grid */
+      .grid-layer {
+        width: 100%; height: 100%;
+        background-image: 
+          linear-gradient(var(--color-grid-cyan) 1px, transparent 1px),
+          linear-gradient(90deg, var(--color-grid-cyan) 1px, transparent 1px),
+          linear-gradient(var(--color-grid-cyan-light) 1px, transparent 1px),
+          linear-gradient(90deg, var(--color-grid-cyan-light) 1px, transparent 1px);
+        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      }
+
+      /* Margin Line (common on engineering pads) */
+      .margin-line {
+        width: 2px; height: 100%;
+        background: rgba(230, 57, 70, 0.3);
+        left: 100px;
+      }
+
+      /* Paper Texture Overlay */
+      .paper-texture {
+        width: 100%; height: 100%;
+        opacity: 0.15;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)'/%3E%3C/svg%3E");
+      }
+
+      .stamp {
+        border: 4px solid var(--color-accent);
+        padding: 10px 20px;
+        color: var(--color-accent);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transform: rotate(-5deg);
+        opacity: 0.6;
+        bottom: 50px; right: 50px;
+      }
+
+      .header-info {
+        top: 20px; left: 120px;
+        display: flex; gap: 40px;
+        font-size: 14px; color: var(--color-text);
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--color-grid-cyan);
+        padding-bottom: 5px;
+        width: 1700px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <div class="grid-layer clip" id="grid"></div>
+      <div class="margin-line clip"></div>
+      <div class="paper-texture clip"></div>
+
+      <div class="header-info clip">
+        <div>PROJECT: ARCHIVAL_RECON_01</div>
+        <div>DRAFTED BY: AUTO-GEN-7</div>
+        <div>DATE: 2026.04.27</div>
+        <div style="margin-left: auto;">SHEET: 01 / 01</div>
+      </div>
+
+      <div class="stamp clip" id="stamp-box">APPROVED FOR ANALYSIS</div>
+
+      <!-- A "sketch" element -->
+      <svg class="clip" style="top: 200px; left: 200px; width: 600px; height: 400px; opacity: 0.8;">
+        <rect id="sketch-rect" x="50" y="50" width="400" height="250" fill="none" stroke="#023047" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000" />
+        <line id="sketch-line" x1="50" y1="50" x2="450" y2="300" stroke="#023047" stroke-width="1" stroke-dasharray="1000" stroke-dashoffset="1000" />
+      </svg>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Reveal the sketch
+      tl.to("#sketch-rect", { strokeDashoffset: 0, duration: 2, ease: "power1.inOut" }, 1);
+      tl.to("#sketch-line", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 2);
+
+      // 2. Subtle camera pan (the "moving drafting table" feel)
+      tl.fromTo("#grid", { x: -10, y: -10 }, { x: 0, y: 0, duration: 10, ease: "sine.inOut" }, 0);
+
+      // 3. Stamp appearance
+      tl.from("#stamp-box", { scale: 1.5, opacity: 0, duration: 0.5, ease: "back.out" }, 4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
