@@ -184,32 +184,32 @@
       data-width="1920"
       data-height="1080"
     >
-      <div class="glow" id="glow-1"></div>
-      <div class="glow" id="glow-2"></div>
+      <div class="glow clip" id="glow-1" data-start="0" data-duration="10" data-track-index="0"></div>
+      <div class="glow clip" id="glow-2" data-start="0" data-duration="10" data-track-index="1"></div>
 
-      <div class="logo-container" id="logo">
+      <div class="logo-container clip" id="logo" data-start="0.5" data-duration="9.5" data-track-index="2">
         <div class="logo-mark">H</div>
         <div class="logo-text">HYPERFRAMES</div>
       </div>
 
       <div class="content">
         <div id="hero-text">
-          <p class="subtitle" id="subtitle">The Future of Video</p>
-          <h1 id="title">HTML<br>NATIVE</h1>
+          <p class="subtitle clip" id="subtitle" data-start="1" data-duration="9" data-track-index="3">The Future of Video</p>
+          <h1 id="title" class="clip" data-start="1.2" data-duration="8.8" data-track-index="4">HTML<br>NATIVE</h1>
         </div>
 
         <div class="feature-grid" id="features">
-          <div class="feature-card">
+          <div class="feature-card clip" data-start="2" data-duration="8" data-track-index="5">
             <div class="feature-icon">✨</div>
             <div class="feature-title">Pure Web</div>
             <div class="feature-desc">Render HTML, CSS, and JS directly to video frames with pixel perfection.</div>
           </div>
-          <div class="feature-card">
+          <div class="feature-card clip" data-start="2.2" data-duration="7.8" data-track-index="6">
             <div class="feature-icon">⚡</div>
             <div class="feature-title">Fast Render</div>
             <div class="feature-desc">High-performance rendering engine powered by Playwright and FFmpeg.</div>
           </div>
-          <div class="feature-card">
+          <div class="feature-card clip" data-start="2.4" data-duration="7.6" data-track-index="7">
             <div class="feature-icon">🎨</div>
             <div class="feature-title">Full Creative</div>
             <div class="feature-desc">Use GSAP, Three.js, or any web library to create stunning visuals.</div>
@@ -217,7 +217,7 @@
         </div>
       </div>
 
-      <div class="bottom-bar" id="footer">
+      <div class="bottom-bar clip" id="footer" data-start="3" data-duration="7" data-track-index="8">
         <div class="timestamp">2026 // HF-TEST-01</div>
         <div class="badge">BETA ACCESS</div>
       </div>
@@ -254,7 +254,7 @@
       tl.to("#title", { 
         scale: 1.02, 
         duration: 5, 
-        repeat: -1, 
+        repeat: 1, 
         yoyo: true, 
         ease: "sine.inOut" 
       }, 1.2);
