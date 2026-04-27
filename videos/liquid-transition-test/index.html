@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-blue: #0088ff;
+        --color-red: #ff0033;
+        --color-bg: #000000;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+      .scene {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: filter 0.1s;
+      }
+
+      .massive-text {
+        font-size: 180px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+      }
+
+      .sub-text {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 40px;
+        letter-spacing: 0.5em;
+        opacity: 0.6;
+        margin-top: 20px;
+      }
+
+      /* Liquid Filter Container */
+      .liquid-container {
+        width: 100%;
+        height: 100%;
+        filter: url(#liquid-filter);
+      }
+
+      /* Hidden SVG Filters */
+      #svg-filters {
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <!-- SVG Filters for Liquid Effect (Moved inside root) -->
+      <svg id="svg-filters" style="width:0; height:0; position:absolute;">
+        <defs>
+          <filter id="liquid-filter">
+            <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.0" numOctaves="2" result="noise" />
+            <feDisplacementMap id="disp" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div class="liquid-container clip" data-start="0" data-duration="10" data-track-index="100">
+        
+        <!-- Scene 1: STABLE -->
+        <div class="scene clip" id="scene1" data-start="0" data-duration="4.6" data-track-index="1">
+          <div class="scene-content" id="content1" style="background: #001122; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <h1 class="massive-text" style="color: var(--color-blue);">STABLE</h1>
+            <div class="sub-text">SYSTEM INTEGRITY NOMINAL</div>
+          </div>
+        </div>
+
+        <!-- Scene 2: BREACH -->
+        <div class="scene clip" id="scene2" data-start="4.5" data-duration="5.5" data-track-index="2">
+          <div class="scene-content" id="content2" style="background: #220000; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+            <h1 class="massive-text" style="color: var(--color-red);">BREACH</h1>
+            <div class="sub-text" style="color: var(--color-red);">CRITICAL ERROR DETECTED</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Initial State (Animate child content, not the clip itself)
+      // Done via inline style opacity: 0
+
+      // 2. Liquid Distortion Animation
+      tl.to("#disp", { attr: { scale: 100 }, duration: 0.5, ease: "power2.in" }, 4);
+      tl.to("#turb", { attr: { baseFrequency: "0.05 0.02" }, duration: 0.5, ease: "power2.in" }, 4);
+
+      // 3. The Swap (Animate content opacity)
+      tl.to("#content2", { opacity: 1, duration: 0.1 }, 4.5);
+
+      // 4. Resolve Distortion
+      tl.to("#disp", { attr: { scale: 0 }, duration: 0.8, ease: "expo.out" }, 4.5);
+      tl.to("#turb", { attr: { baseFrequency: "0.0 0.0" }, duration: 0.8, ease: "expo.out" }, 4.5);
+
+      // 5. Scene Animations
+      tl.from("#content1 .massive-text", { scale: 0.8, opacity: 0, duration: 1.5, ease: "expo.out" }, 0.5);
+      tl.from("#content2 .massive-text", { scale: 1.5, opacity: 0, duration: 1.5, ease: "expo.out" }, 4.5);
+
+      // Subtle pulse for Scene 1
+      tl.to("#scene1", { scale: 1.05, duration: 4, ease: "none" }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
