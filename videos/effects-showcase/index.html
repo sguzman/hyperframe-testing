@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=1920, height=1080" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
     <script src="vendor/gsap.min.js"></script>
     <style>
       :root {
-        --scorch-pct: 0%;
+        --color-blueprint: #219EBC;
+        --color-bg: #023047;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
@@ -21,74 +22,92 @@
       #root { position: relative; width: 100%; height: 100%; }
       .clip { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-      /* LAYER 1: CONTENT */
+      /* CONTENT LAYER */
       #base-layer {
         z-index: 10;
-        background: radial-gradient(circle, #2a9d8f, #264653);
+        background: radial-gradient(circle at 50% 50%, #457B9D, #1D3557);
         display: flex; align-items: center; justify-content: center;
+        mask-image: url(#scorch-mask); /* SVG Mask */
+        -webkit-mask-image: url(#scorch-mask);
       }
 
-      /* LAYER 2: SCANLINES (Very Bold for Verification) */
-      #scanline-layer {
-        z-index: 20;
+      /* SCANLINES LAYER (Pattern based) */
+      #scanline-overlay {
+        z-index: 50;
         pointer-events: none;
-        background: linear-gradient(
-            rgba(18, 16, 16, 0) 50%, 
-            rgba(0, 0, 0, 0.4) 50%
-        );
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP7F6VAAAAD0lEQVR42mNkYGA4wMAAAAYAAp36Z8AAAAAASUVORK5CYII=');
         background-size: 100% 4px;
-        opacity: 0.8;
+        opacity: 0.15;
+        mix-blend-mode: overlay;
       }
 
-      /* LAYER 3: CELLULOID DAMAGE */
-      #damage-layer {
-        z-index: 30;
+      /* VIGNETTE */
+      #vignette {
+        z-index: 60;
+        background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
         pointer-events: none;
       }
 
-      /* LAYER 4: SCORCH REVEAL */
-      #scorch-layer {
-        z-index: 100;
-        background: black;
-        /* Using clip-path for 100% compatibility */
-        clip-path: circle(var(--scorch-radius, 0%) at 50% 50%);
+      #damage-canvas {
+        z-index: 70;
+        pointer-events: none;
       }
 
-      .big-text {
-        font-size: 150px; color: white; border: 20px solid white;
-        padding: 60px; text-transform: uppercase; letter-spacing: 30px;
-        text-align: center;
+      .title-box {
+        text-align: center; color: white;
       }
-
-      #ui-labels {
-        z-index: 1000; position: absolute; top: 40px; left: 40px;
-        color: #0f0; font-family: monospace; font-size: 24px;
-        background: rgba(0,0,0,0.8); padding: 20px; border: 1px solid #0f0;
-      }
+      .title-box h1 { font-family: 'Outfit', sans-serif; font-size: 180px; line-height: 0.8; letter-spacing: -5px; }
+      .title-box p { font-size: 30px; letter-spacing: 15px; text-transform: uppercase; opacity: 0.6; margin-top: 20px; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
       
-      <div id="base-layer" class="clip">
-          <div id="content-mover">
-            <div class="big-text">VISUAL<br>TEST</div>
-            <div style="font-size: 40px; text-align: center; margin-top: 40px; letter-spacing: 10px;">[ SYSTEM_VALIDATION_02 ]</div>
+      <!-- SVG FILTERS & MASKS -->
+      <svg width="0" height="0" style="position: absolute;">
+        <defs>
+          <!-- THE SCORCH MASK -->
+          <mask id="scorch-mask-def">
+            <g id="mask-group">
+                <circle id="mask-circle" cx="960" cy="540" r="0" fill="white" filter="url(#rough-edge)" />
+            </g>
+          </mask>
+          
+          <!-- ROUGH EDGE FILTER FOR SCORCH -->
+          <filter id="rough-edge">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+
+          <!-- CRT BULGE -->
+          <filter id="bulge-filter">
+             <feGaussianBlur stdDeviation="1" />
+             <feComponentTransfer>
+                <feFuncA type="linear" slope="1.2" />
+             </feComponentTransfer>
+          </filter>
+        </defs>
+      </svg>
+
+      <div id="base-layer" class="clip" style="mask: url(#scorch-mask-def); -webkit-mask: url(#scorch-mask-def);">
+          <div id="content-container" class="title-box">
+             <h1>PREMIUM<br>STUDIO</h1>
+             <p>Archival Systems v4.0</p>
+             <!-- Sketchy details -->
+             <svg width="600" height="200" style="margin-top: 50px; stroke: white; stroke-width: 1; fill: none; opacity: 0.3;">
+                <path d="M0,100 L600,100 M100,0 L100,200 M500,0 L500,200" />
+                <circle cx="300" cy="100" r="80" stroke-dasharray="5 5" />
+             </svg>
           </div>
       </div>
 
-      <div id="scanline-layer" class="clip"></div>
+      <div id="scanline-overlay" class="clip"></div>
+      <div id="vignette" class="clip"></div>
       
-      <svg id="damage-layer" class="clip" style="background: transparent;">
-        <!-- Damage elements will be injected here -->
-      </svg>
+      <canvas id="damage-canvas" width="1920" height="1080" class="clip"></canvas>
 
-      <!-- Note: the clip-path will reveal the content by making the black layer vanish from the center -->
-      <div id="scorch-layer" class="clip"></div>
-
-      <div id="ui-labels">
-        STATUS: <span id="status-text">INITIALIZING</span><br>
-        REVEAL: <span id="reveal-text">0%</span>
+      <div class="clip" style="top: 40px; left: 40px; color: #aaa; font-size: 12px; letter-spacing: 4px;">
+        PP_STATUS: [VERIFIED] // AGENTIC_RENDER_CORE_V4
       </div>
 
     </div>
@@ -97,71 +116,47 @@
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      const statusEl = document.getElementById('status-text');
-      const revealEl = document.getElementById('reveal-text');
+      const canvas = document.getElementById('damage-canvas');
+      const ctx = canvas.getContext('2d');
 
-      // 1. SCANLINE MOVEMENT (Constant)
-      tl.to("#scanline-layer", { backgroundPosition: "0 100px", duration: 1, repeat: 14, ease: "none" }, 0);
+      // 1. SCORCH REVEAL
+      tl.to("#mask-circle", { attr: { r: 1200 }, duration: 5, ease: "power2.inOut" }, 0);
 
-      // 2. SCORCH REVEAL (0s - 4s)
-      // Since clip-path: circle(0%) is a hole, we want the black layer to START with circle(150%) 
-      // but wait, clip-path HIDES everything outside. 
-      // To reveal, we actually want a "Hole" in the black layer.
-      // Better: Use a mask. 
-      // Let's use a simpler approach: Opacity for the base content reveal, but for the "burning" feel, 
-      // let's animate the black layer's clip-path from 150% (show nothing of black) to 0%? No.
-      
-      // Correct Logic for SCORCH: 
-      // Black layer is visible. We want to cut a hole in it.
-      // CSS mask-image is best. Let's fix the syntax.
-      document.getElementById('scorch-layer').style.webkitMaskImage = "radial-gradient(circle, transparent 0%, black 0%)";
-      document.getElementById('scorch-layer').style.webkitMaskSize = "100% 100%";
-      document.getElementById('scorch-layer').style.webkitMaskRepeat = "no-repeat";
+      // 2. SCANLINE DRIFT
+      tl.to("#scanline-overlay", { backgroundPosition: "0 100px", duration: 10, ease: "none" }, 0);
 
-      const scorchProxy = { val: 0 };
-      tl.to(scorchProxy, {
-        val: 100,
-        duration: 4,
-        ease: "power2.in",
+      // 3. CAMERA DYNAMISM
+      tl.fromTo("#content-container", { scale: 1.1, rotation: 1 }, { scale: 1.0, rotation: -1, duration: 10, ease: "sine.inOut" }, 0);
+
+      // 4. PROCEDURAL DAMAGE (BLACK GUNK)
+      // We will use a proxy to trigger canvas draws
+      const damageProxy = { frame: 0 };
+      tl.to(damageProxy, {
+        frame: 300,
+        duration: 10,
+        ease: "none",
         onUpdate: function() {
-            const p = scorchProxy.val;
-            document.getElementById('scorch-layer').style.webkitMaskImage = `radial-gradient(circle, transparent ${p}%, black ${p + 10}%)`;
-            revealEl.innerText = Math.floor(p) + "%";
-            statusEl.innerText = "SCORCH_REVEAL_ACTIVE";
+            ctx.clearRect(0, 0, 1920, 1080);
+            ctx.fillStyle = "rgba(0,0,0,0.7)";
+            ctx.strokeStyle = "rgba(0,0,0,0.5)";
+            
+            // Random dust
+            for(let i=0; i<3; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random()*1920, Math.random()*1080, Math.random()*3, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            // Random hair/scratch
+            if(Math.random() > 0.8) {
+                ctx.beginPath();
+                const x = Math.random()*1920;
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x + (Math.random()-0.5)*20, 1080);
+                ctx.stroke();
+            }
         }
       }, 0);
-
-      // 3. BASE MOVEMENT
-      tl.fromTo("#content-mover", { scale: 0.8, rotation: -5 }, { scale: 1.2, rotation: 5, duration: 15, ease: "sine.inOut" }, 0);
-
-      // 4. CELLULOID DAMAGE (12s - 15s)
-      const damageLayer = document.getElementById('damage-layer');
-      // Pre-generate 100 damage frames to ensure they are in the timeline
-      for(let t=0; t<15; t+=0.06) {
-          const x = Math.random() * 1920;
-          const y = Math.random() * 1080;
-          const circ = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          circ.setAttribute("cx", x); circ.setAttribute("cy", y);
-          circ.setAttribute("r", 5 + Math.random() * 10);
-          circ.setAttribute("fill", "white");
-          circ.setAttribute("opacity", "0");
-          damageLayer.appendChild(circ);
-          tl.to(circ, { opacity: 1, duration: 0.03, repeat: 1, yoyo: true }, t);
-
-          if(Math.random() > 0.5) {
-              const lx = Math.random() * 1920;
-              const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-              line.setAttribute("x1", lx); line.setAttribute("y1", 0);
-              line.setAttribute("x2", lx + (Math.random()-0.5)*30); line.setAttribute("y2", 1080);
-              line.setAttribute("stroke", "white"); line.setAttribute("stroke-width", "2");
-              line.setAttribute("opacity", "0");
-              damageLayer.appendChild(line);
-              tl.to(line, { opacity: 1, duration: 0.03, repeat: 1, yoyo: true }, t);
-          }
-      }
-
-      tl.add(() => statusEl.innerText = "DAMAGE_OVERLAY_ON", 4);
-      tl.add(() => statusEl.innerText = "FULL_SYSTEM_ACTIVE", 8);
 
       window.__timelines["main"] = tl;
     </script>
