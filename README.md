@@ -1,36 +1,40 @@
-# Hyperframes Test
+# Hyperframes Test Repository
 
-This repository is set up to test [Hyperframes](https://github.com/heygen-com/hyperframes), a tool for rendering videos using HTML, CSS, and JavaScript.
+This repository is organized to support multiple video projects using [Hyperframes](https://github.com/heygen-com/hyperframes).
 
-## Setup
+## Folder Structure
 
-- **Node.js**: Version 22 or higher is required.
-- **FFmpeg**: Must be installed and available in your system's PATH.
-
-## Project Structure
-
-- `index.html`: The main composition file. Defines the layout and animations (using GSAP).
-- `hyperframes.json`: Configuration for the Hyperframes tool.
-- `meta.json`: Metadata for the video composition.
+```
+/
+├── videos/
+│   ├── welcome-demo/      # Example project
+│   │   ├── index.html     # Composition
+│   │   ├── meta.json      # Project metadata
+│   │   └── assets/        # Local assets (images, video, audio)
+│   └── [video-name]/      # Your new video projects
+├── renders/               # Output directory for rendered MP4s
+├── hyperframes.json       # Global configuration
+└── README.md
+```
 
 ## Usage
 
+### Create a New Video
+1. Create a new folder in `videos/`: `mkdir videos/my-new-video`
+2. Add an `index.html` and `meta.json` (you can copy from `welcome-demo`).
+
 ### Preview
-To preview the video in your browser:
+To preview a specific video:
 ```bash
-npx hyperframes preview
+npx hyperframes preview videos/welcome-demo
 ```
 
 ### Render
-To render the video to an MP4 file:
+To render a specific video to MP4:
 ```bash
-npx hyperframes render
+npx hyperframes render videos/welcome-demo
 ```
 
-The output will be saved as `main.mp4` (or as configured in `meta.json`).
-
-## Demo Features
-- Modern UI with Google Fonts (Outfit & Space Grotesk)
-- GSAP-powered entrance and pulse animations
-- Glassmorphism effects
-- Responsive 1080p composition
+## Requirements
+- **Node.js 22+**
+- **FFmpeg** (installed and in PATH)
