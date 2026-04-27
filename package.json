@@ -1,0 +1,26 @@
+{
+  "name": "hyperframe-testing",
+  "version": "1.0.0",
+  "description": "This repository is organized to support multiple video projects using [Hyperframes](https://github.com/heygen-com/hyperframes).",
+  "main": "index.js",
+  "scripts": {
+    "preview": "hyperframes preview",
+    "render": "hyperframes render",
+    "render:all": "for dir in videos/*/ ; do hyperframes render \"$dir\"; done"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sguzman/hyperframe-testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sguzman/hyperframe-testing/issues"
+  },
+  "homepage": "https://github.com/sguzman/hyperframe-testing#readme",
+  "devDependencies": {
+    "hyperframes": "^0.4.31"
+  }
+}
