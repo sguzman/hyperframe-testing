@@ -135,7 +135,6 @@
         height: 100%;
         background: var(--color-red);
         z-index: 100;
-        transform: translateX(-100%);
       }
 
       #wipe-2 {
@@ -143,7 +142,6 @@
         height: 100%;
         background: var(--color-gold);
         z-index: 99;
-        transform: translateX(-100%);
       }
 
       .label-small {
@@ -177,7 +175,7 @@
 
       <!-- Map Display -->
       <div id="map-container" class="clip">
-        <svg id="map-svg" data-start="1.5" data-duration="13.5" data-track-index="3">
+        <svg id="map-svg" class="clip" data-start="1.5" data-duration="13.5" data-track-index="3">
           <g id="map-g"></g>
           <g id="highlight-g"></g>
         </svg>
@@ -198,8 +196,11 @@
       const tl = gsap.timeline({ paused: true });
 
       // 1. Initial Transitions (Wipe in)
-      tl.fromTo("#wipe", { x: "0%" }, { x: "100%", duration: 1.2, ease: "power4.inOut" }, 0);
-      tl.fromTo("#wipe-2", { x: "0%" }, { x: "100%", duration: 1.5, ease: "power4.inOut" }, 0);
+      tl.set("#wipe", { xPercent: -100 });
+      tl.set("#wipe-2", { xPercent: -100 });
+
+      tl.fromTo("#wipe", { xPercent: 0 }, { xPercent: 100, duration: 1.2, ease: "power4.inOut" }, 0);
+      tl.fromTo("#wipe-2", { xPercent: 0 }, { xPercent: 100, duration: 1.5, ease: "power4.inOut" }, 0);
 
       // 2. Text "Hits"
       tl.from("#sub-header", { x: -50, opacity: 0, duration: 1, ease: "expo.out" }, 0.5);
