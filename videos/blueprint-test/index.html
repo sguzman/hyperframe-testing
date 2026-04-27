@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #001a33;
+        --color-line: #00ccff;
+        --color-accent: #ffffff;
+        --color-text: #ffffff;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+      .clip { position: absolute; }
+
+      /* SVG Blueprint Style */
+      .blueprint-svg {
+        width: 800px;
+        height: 800px;
+        fill: none;
+        stroke: var(--color-line);
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* Callout Labels */
+      .callout {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .callout-line {
+        width: 150px;
+        height: 2px;
+        background: var(--color-line);
+        margin-bottom: 10px;
+        transform-origin: left;
+      }
+
+      .callout-text {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: rgba(0, 204, 255, 0.1);
+        padding: 5px 15px;
+        border-left: 4px solid var(--color-line);
+      }
+
+      /* Background Grid */
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image: 
+          linear-gradient(rgba(0, 204, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 204, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <div class="bg-grid clip" data-start="0" data-duration="10" data-track-index="0"></div>
+
+      <!-- Blueprint SVG -->
+      <svg class="blueprint-svg clip" id="main-svg" viewBox="0 0 100 100" data-start="1" data-duration="9" data-track-index="1">
+        <!-- Complex Gear Pattern -->
+        <path id="gear-path" d="M50 10 L55 20 L65 20 L70 30 L80 30 L80 40 L90 45 L90 55 L80 60 L80 70 L70 70 L65 80 L55 80 L50 90 L45 80 L35 80 L30 70 L20 70 L20 60 L10 55 L10 45 L20 40 L20 30 L30 30 L35 20 L45 20 Z M50 35 A15 15 0 1 0 50 65 A15 15 0 1 0 50 35 Z M50 45 A5 5 0 1 1 50 55 A5 5 0 1 1 50 45 Z" />
+      </svg>
+
+      <!-- Callouts -->
+      <div class="callout clip" id="c1" style="top: 25%; left: 65%;" data-start="3" data-duration="7" data-track-index="2">
+        <div class="callout-line" id="l1"></div>
+        <div class="callout-text">ASSEMBLY A-1</div>
+      </div>
+
+      <div class="callout clip" id="c2" style="top: 65%; left: 20%;" data-start="4" data-duration="6" data-track-index="3">
+        <div class="callout-line" id="l2"></div>
+        <div class="callout-text">800 RPM NOMINAL</div>
+      </div>
+
+      <!-- Central Text -->
+      <h1 class="clip" id="main-title" style="bottom: 100px; font-size: 80px; font-weight: 900; letter-spacing: 0.5em; text-transform: uppercase;" data-start="0" data-duration="10" data-track-index="4">SPECIFICATIONS</h1>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Get path length for stroke animation
+      const path = document.querySelector("#gear-path");
+      const length = path.getTotalLength();
+
+      // Set initial state
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+
+      // 1. Draw-In Effect
+      tl.to(path, { strokeDashoffset: 0, duration: 3, ease: "power2.inOut" }, 1);
+
+      // 2. Sudden Fill
+      tl.to(path, { fill: "rgba(0, 204, 255, 0.2)", duration: 0.5, ease: "expo.out" }, 4);
+      tl.to(path, { strokeWidth: 1, duration: 0.5 }, 4);
+
+      // 3. Callout Reveals
+      tl.from("#l1", { scaleX: 0, duration: 0.8, ease: "expo.out" }, 3);
+      tl.from("#c1 .callout-text", { x: -20, opacity: 0, duration: 0.6 }, 3.5);
+
+      tl.from("#l2", { scaleX: 0, duration: 0.8, ease: "expo.out" }, 4);
+      tl.from("#c2 .callout-text", { x: 20, opacity: 0, duration: 0.6 }, 4.5);
+
+      // 4. Title reveal
+      tl.from("#main-title", { y: 20, opacity: 0, duration: 1.5, ease: "expo.out" }, 0.5);
+
+      // 5. Continuous Rotation
+      tl.to("#main-svg", { rotation: 360, duration: 20, ease: "none", repeat: 1 }, 1);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
