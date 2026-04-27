@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #121212;
+        --color-accent: #ffcc00;
+        --color-text: #ffffff;
+        --color-gray: #2d2d2d;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+
+      /* Background Grid (Far Layer) */
+      .bg-grid {
+        width: 300%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(255, 255, 255, 0.03) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 2px, transparent 2px);
+        background-size: 150px 150px;
+        z-index: 1;
+      }
+
+      /* Midground Silhouette */
+      .midground-silhouette {
+        width: 1400px;
+        height: 800px;
+        opacity: 0.15;
+        fill: var(--color-accent);
+        z-index: 2;
+        filter: blur(2px);
+      }
+
+      /* Foreground Content */
+      .foreground-text {
+        z-index: 10;
+        text-transform: uppercase;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 0.8;
+      }
+
+      .hit-label {
+        background: var(--color-accent);
+        color: var(--color-bg);
+        padding: 10px 30px;
+        font-size: 40px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <!-- FAR LAYER: Background Grid -->
+      <div class="bg-grid clip" id="far-layer" data-start="0" data-duration="10" data-track-index="1"></div>
+
+      <!-- MID LAYER: Large Silhouette -->
+      <svg class="midground-silhouette clip" id="mid-layer" style="top: 150px; left: 200px;" viewBox="0 0 100 100" data-start="0" data-duration="10" data-track-index="2">
+        <!-- Simplified Tank Silhouette -->
+        <path d="M10,60 L90,60 L85,45 L15,45 Z M30,45 L70,45 L65,30 L35,30 Z M45,30 L55,30 L55,20 L45,20 Z" />
+      </svg>
+
+      <!-- NEAR LAYER: Foreground Text -->
+      <div class="clip" id="near-layer" style="top: 40%; left: 10%;" data-start="1" data-duration="9" data-track-index="10">
+        <h1 class="foreground-text" id="main-title" style="font-size: 200px;">MECHANICAL<br>WEIGHT</h1>
+        <div class="hit-label" id="label">SYSTEM LOAD: 98%</div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. FAR LAYER: Very slow movement
+      tl.to("#far-layer", { x: -500, duration: 10, ease: "none" }, 0);
+
+      // 2. MID LAYER: Faster movement (Parallax)
+      tl.to("#mid-layer", { x: 400, duration: 10, ease: "power1.inOut" }, 0);
+      tl.from("#mid-layer", { opacity: 0, duration: 2 }, 0);
+
+      // 3. NEAR LAYER: Full speed "Hits"
+      tl.from("#main-title", { 
+        x: -200, 
+        opacity: 0, 
+        duration: 1.2, 
+        ease: "expo.out" 
+      }, 1);
+
+      tl.from("#label", { 
+        scale: 0, 
+        duration: 0.8, 
+        ease: "back.out(2)" 
+      }, 1.8);
+
+      // 4. Global subtle camera drift
+      tl.to("#root", { 
+        scale: 1.05, 
+        duration: 10, 
+        ease: "none" 
+      }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

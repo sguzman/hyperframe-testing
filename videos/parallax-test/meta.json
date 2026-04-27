@@ -1,0 +1,8 @@
+{
+  "id": "parallax-test",
+  "name": "Parallax Depth (2.5D) Test",
+  "duration": 10,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080
+}
