@@ -1,0 +1,17 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base -->
+  <rect x="20" y="220" width="360" height="60" fill="#F1FAEE"/>
+  <!-- Middle Block -->
+  <rect x="80" y="160" width="240" height="60" fill="#F1FAEE"/>
+  <!-- Dome Base -->
+  <rect x="150" y="140" width="100" height="20" fill="#F1FAEE"/>
+  <!-- Dome -->
+  <path d="M150 140 A 50 50 0 0 1 250 140" fill="#F1FAEE"/>
+  <!-- Top Finial -->
+  <rect x="195" y="80" width="10" height="20" fill="#F1FAEE"/>
+  <!-- Windows/Pillars details (subtle) -->
+  <rect x="100" y="170" width="10" height="40" fill="#1D3557"/>
+  <rect x="130" y="170" width="10" height="40" fill="#1D3557"/>
+  <rect x="260" y="170" width="10" height="40" fill="#1D3557"/>
+  <rect x="290" y="170" width="10" height="40" fill="#1D3557"/>
+</svg>
