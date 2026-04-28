@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1D3557;
+        --color-power: #E63946;
+        --color-technical: #457B9D;
+        --color-value: #FFB703;
+        --color-neutral: #F1FAEE;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Montserrat', sans-serif; color: var(--color-neutral);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+      
+      .massive-title { font-size: 100px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 0.9; }
+      .technical-label { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 0.4em; color: var(--color-technical); }
+      .data-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 48px; color: var(--color-value); }
+
+      /* Map Elements */
+      .map-container { width: 1200px; height: 800px; position: relative; }
+      .us-map { fill: #0a1523; stroke: var(--color-technical); stroke-width: 2px; }
+      .ca-highlight { fill: var(--color-power); }
+
+      /* Volatility Meter */
+      .volatility-line { fill: none; stroke: var(--color-value); stroke-width: 6px; stroke-linecap: round; }
+
+      /* Background */
+      .grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 100px 100px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      <div class="grid-lines"></div>
+
+      <!-- SCENE 1: THE FEDERATION -->
+      <div id="scene-federation" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1 class="massive-title" id="title-1" style="margin-bottom: 50px;">A FEDERATION<br>OF SYSTEMS</h1>
+        <div class="map-container">
+          <svg viewBox="0 0 1000 600" style="width: 100%; height: 100%;">
+            <!-- Simplified US Map shape -->
+            <path class="us-map" d="M100 100 L900 100 L950 500 L50 500 Z" id="us-outline" />
+            <path class="ca-highlight" d="M100 200 L150 200 L150 450 L100 450 Z" id="ca-outline" style="opacity: 0;" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- SCENE 2: CALIFORNIA VOLATILITY -->
+      <div id="scene-california" class="clip" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0;">
+        <div style="margin-right: 100px;">
+          <p class="technical-label">CASE_STUDY: CALIFORNIA</p>
+          <h1 class="massive-title">THE HIGH<br><span style="color: var(--color-power);">VOLTAGE</span> MODEL</h1>
+          <div class="data-value" style="margin-top: 20px;">60% INCOME TAX</div>
+        </div>
+        <div style="width: 600px; height: 400px; position: relative;">
+          <svg viewBox="0 0 600 400" style="width: 100%; height: 100%;">
+            <path class="volatility-line" d="M0 200 Q 150 50 300 200 T 600 200" id="wave" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- SCENE 3: THE FINAL MODEL -->
+      <div id="scene-final" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+        <h1 class="massive-title" style="text-align: center; margin-bottom: 50px;">THE CASH<br>CONSTITUTION</h1>
+        <div id="icon-row" style="display: flex; gap: 40px;">
+          <div style="width: 150px; height: 150px; background: var(--color-power);"></div>
+          <div style="width: 150px; height: 150px; background: var(--color-technical);"></div>
+          <div style="width: 150px; height: 150px; background: var(--color-value);"></div>
+          <div style="width: 150px; height: 150px; background: var(--color-neutral);"></div>
+        </div>
+      </div>
+
+       <!-- PANEL WIPE -->
+      <div id="wipe-panel" class="clip" style="width: 100%; height: 100%; background: var(--color-technical); left: -100%; z-index: 100;"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // --- TIMELINE ---
+
+      // 1. Federation Map (0s - 15s)
+      tl.from("#us-outline", { scale: 0, opacity: 0, duration: 1.5, ease: "expo.out" }, 1);
+      tl.from("#title-1", { x: -100, opacity: 0, duration: 1.2 }, 0.5);
+      tl.to("#ca-outline", { opacity: 1, duration: 0.5 }, 5);
+
+      // 2. Transition to California (15s - 16s)
+      tl.to("#scene-federation", { opacity: 0, scale: 1.2, duration: 1 }, 15);
+      tl.to("#scene-california", { opacity: 1, duration: 1 }, 15.5);
+
+      // 3. Volatility Wave (16s - 35s)
+      const wave = document.getElementById("wave");
+      const length = wave.getTotalLength();
+      gsap.set(wave, { strokeDasharray: length, strokeDashoffset: length });
+
+      tl.to(wave, { strokeDashoffset: 0, duration: 2, ease: "power2.inOut" }, 16.5);
+      tl.to("#wave", { 
+        attr: { d: "M0 200 Q 150 350 300 200 T 600 200" }, 
+        duration: 1, 
+        yoyo: true, 
+        repeat: -1, 
+        ease: "sine.inOut" 
+      }, 18.5);
+
+      // 4. Wipe to Final (35s - 36s)
+      tl.to("#wipe-panel", { left: "0%", duration: 0.8, ease: "power4.inOut" }, 35);
+      tl.set("#scene-california", { opacity: 0 }, 35.4);
+      tl.set("#scene-final", { opacity: 1 }, 35.4);
+      tl.to("#wipe-panel", { left: "100%", duration: 0.8, ease: "power4.inOut" }, 35.8);
+
+      // 5. Final Recap (36s - 50s)
+      tl.from("#icon-row div", { scale: 0, rotation: 45, duration: 1, stagger: 0.2, ease: "back.out(1.7)" }, 36.5);
+      tl.from("#scene-final h1", { y: 50, opacity: 0, duration: 1.5 }, 37.5);
+
+      // 6. Global analytical pressure
+      tl.to("#scene-final", { scale: 1.1, duration: 10, ease: "power1.inOut" }, 50);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

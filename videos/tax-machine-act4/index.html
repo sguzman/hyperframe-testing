@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1D3557;
+        --color-power: #E63946;
+        --color-technical: #457B9D;
+        --color-value: #FFB703;
+        --color-neutral: #F1FAEE;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Montserrat', sans-serif; color: var(--color-neutral);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+      
+      .massive-title { font-size: 100px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 0.9; }
+      .technical-label { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 0.4em; color: var(--color-technical); }
+      .data-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 48px; color: var(--color-value); }
+
+      /* Tombstone */
+      .monument {
+        width: 500px; height: 700px; background: #0a1523; border-top-left-radius: 250px; border-top-right-radius: 250px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; border: 10px solid rgba(255,255,255,0.1);
+      }
+
+      /* Shadow Budget */
+      .shadow-bar {
+        width: 800px; height: 80px; background: rgba(255,255,255,0.05); border-left: 10px solid var(--color-technical);
+        display: flex; align-items: center; padding: 0 30px; font-family: 'Montserrat'; font-weight: 900; font-size: 30px;
+      }
+
+      /* Pipe */
+      .pipe { width: 1200px; height: 100px; background: #244152; border: 5px solid var(--color-neutral); position: relative; }
+      .leak-particle { position: absolute; color: var(--color-value); font-family: 'Montserrat'; font-weight: 900; font-size: 40px; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      
+      <!-- SCENE 1: THE MONUMENT -->
+      <div id="scene-estate" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1 class="massive-title" id="title-1" style="margin-bottom: 50px;">SYMBOLIC<br>WEIGHT</h1>
+        <div class="monument" id="monument">
+          <p class="technical-label">ESTATE_TAX</p>
+          <h2 class="massive-title" style="font-size: 80px; color: var(--color-power);">$31B</h2>
+        </div>
+      </div>
+
+      <!-- SCENE 2: THE SHADOW BUDGET -->
+      <div id="scene-expenditures" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+        <h1 class="massive-title" style="margin-bottom: 50px;">THE<br><span style="color: var(--color-technical);">SHADOW</span> BUDGET</h1>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="shadow-bar" id="sb-1">HEALTH INSURANCE EXCLUSION <span style="flex-grow: 1; text-align: right; color: var(--color-value);">$296B</span></div>
+          <div class="shadow-bar" id="sb-2">RETIREMENT SAVINGS <span style="flex-grow: 1; text-align: right; color: var(--color-value);">$156B</span></div>
+          <div class="shadow-bar" id="sb-3">CAPITAL PREFERENCES <span style="flex-grow: 1; text-align: right; color: var(--color-value);">$135B</span></div>
+        </div>
+      </div>
+
+      <!-- SCENE 3: THE TAX GAP -->
+      <div id="scene-gap" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+        <h1 class="massive-title" style="margin-bottom: 100px;">THE COMPLIANCE GAP</h1>
+        <div class="pipe" id="pipe">
+          <div style="position: absolute; left: 50%; top: 100%; width: 40px; height: 10px; background: transparent; box-shadow: 0 0 10px red;" id="leak-point"></div>
+        </div>
+        <div class="data-value" style="margin-top: 150px;" id="gap-value">$696 BILLION LEAKAGE</div>
+      </div>
+
+       <!-- PANEL WIPE -->
+      <div id="wipe-panel" class="clip" style="width: 100%; height: 100%; background: var(--color-power); left: -100%; z-index: 100;"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // --- TIMELINE ---
+
+      // 1. Monument (0s - 15s)
+      tl.from("#monument", { y: 1000, duration: 2, ease: "power4.out" }, 1);
+      tl.from("#title-1", { x: -100, opacity: 0, duration: 1.2 }, 0.5);
+
+      // 2. Transition to Shadow (15s - 16s)
+      tl.to("#scene-estate", { opacity: 0, scale: 0.8, duration: 1 }, 15);
+      tl.to("#scene-expenditures", { opacity: 1, duration: 1 }, 15.5);
+
+      // 3. Shadow Bars (16s - 35s)
+      tl.from(".shadow-bar", { x: -1500, duration: 1.2, stagger: 0.3, ease: "expo.out" }, 17);
+
+      // 4. Wipe to Gap (35s - 36s)
+      tl.to("#wipe-panel", { left: "0%", duration: 0.8, ease: "power4.inOut" }, 35);
+      tl.set("#scene-expenditures", { opacity: 0 }, 35.4);
+      tl.set("#scene-gap", { opacity: 1 }, 35.4);
+      tl.to("#wipe-panel", { left: "100%", duration: 0.8, ease: "power4.inOut" }, 35.8);
+
+      // 5. Pipe & Leak (36s - 50s)
+      tl.from("#pipe", { scaleX: 0, duration: 1.5, ease: "expo.out" }, 36.5);
+      
+      // Particles
+      for(let i=0; i<30; i++) {
+        tl.add(() => {
+          const p = document.createElement("div");
+          p.className = "leak-particle";
+          p.innerHTML = "$";
+          p.style.left = "50%";
+          p.style.top = "100%";
+          document.getElementById("pipe").appendChild(p);
+          gsap.to(p, {
+            y: 400 + Math.random() * 200,
+            x: (Math.random() - 0.5) * 200,
+            opacity: 0,
+            rotation: Math.random() * 360,
+            duration: 1.5 + Math.random(),
+            onComplete: () => p.remove()
+          });
+        }, 38 + (i * 0.4));
+      }
+
+      tl.from("#gap-value", { scale: 0, opacity: 0, duration: 1, ease: "back.out(1.7)" }, 39);
+
+      // 6. Global analytical pressure
+      tl.to("#scene-gap", { scale: 1.1, duration: 10, ease: "power1.inOut" }, 50);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

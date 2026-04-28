@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1D3557;
+        --color-power: #E63946;
+        --color-technical: #457B9D;
+        --color-value: #FFB703;
+        --color-neutral: #F1FAEE;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Montserrat', sans-serif; color: var(--color-neutral);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+      
+      .massive-title { font-size: 100px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 0.9; }
+      .technical-label { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 0.4em; color: var(--color-technical); }
+      .data-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 48px; color: var(--color-value); }
+
+      /* Staircase */
+      .stair-step {
+        width: 150px; background: var(--color-technical); border-top: 8px solid var(--color-neutral); position: absolute; bottom: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20px;
+      }
+      .stair-step.top { background: var(--color-power); border-top-color: var(--color-value); }
+      .bracket-rate { font-size: 40px; font-weight: 900; color: var(--color-neutral); margin-bottom: 10px; }
+
+      /* Deduction Shield */
+      .shield {
+        width: 400px; height: 600px; border: 4px dashed var(--color-neutral); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: rgba(255,255,255,0.05);
+      }
+
+      /* Background */
+      .grid-lines { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 50px 50px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
+      <div class="grid-lines"></div>
+
+      <!-- SCENE 1: THE STAIRCASE -->
+      <div id="scene-staircase" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1 class="massive-title" id="title-1" style="position: absolute; top: 100px; left: 100px;">FEDERAL<br>BRACKETS</h1>
+        <div id="stairs-container" style="position: absolute; bottom: 200px; left: 100px; display: flex; align-items: flex-end; gap: 10px;"></div>
+      </div>
+
+      <!-- SCENE 2: DEDUCTION SHIELD -->
+      <div id="scene-deduction" class="clip" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0;">
+        <div class="shield" id="main-shield">
+          <p class="technical-label">STANDARD DEDUCTION</p>
+          <h2 class="massive-title" style="font-size: 80px; color: var(--color-value);">$16,100</h2>
+        </div>
+        <div id="income-block" style="width: 300px; height: 600px; background: var(--color-neutral); margin-left: 200px; display: flex; align-items: center; justify-content: center;">
+          <h2 class="massive-title" style="color: var(--color-bg); font-size: 60px;">GROSS<br>INCOME</h2>
+        </div>
+      </div>
+
+      <!-- SCENE 3: PAYROLL AUTOMATION -->
+      <div id="scene-payroll" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+        <h1 class="massive-title" style="margin-bottom: 100px;">PAYROLL ENGINE</h1>
+        <div style="display: flex; gap: 50px; align-items: center;">
+          <div class="gear" style="width: 300px; height: 300px; border: 15px solid var(--color-technical); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 40px; height: 80px; background: var(--color-technical); position: absolute; top: -40px;"></div>
+            <div style="width: 40px; height: 80px; background: var(--color-technical); position: absolute; bottom: -40px;"></div>
+            <div style="height: 40px; width: 80px; background: var(--color-technical); position: absolute; left: -40px;"></div>
+            <div style="height: 40px; width: 80px; background: var(--color-technical); position: absolute; right: -40px;"></div>
+            <h2 class="massive-title" style="font-size: 60px;">6.2%</h2>
+          </div>
+          <h2 class="massive-title">+</h2>
+          <div class="gear" style="width: 300px; height: 300px; border: 15px solid var(--color-technical); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 40px; height: 80px; background: var(--color-technical); position: absolute; top: -40px;"></div>
+            <div style="width: 40px; height: 80px; background: var(--color-technical); position: absolute; bottom: -40px;"></div>
+            <div style="height: 40px; width: 80px; background: var(--color-technical); position: absolute; left: -40px;"></div>
+            <div style="height: 40px; width: 80px; background: var(--color-technical); position: absolute; right: -40px;"></div>
+            <h2 class="massive-title" style="font-size: 60px;">6.2%</h2>
+          </div>
+        </div>
+        <div class="data-value" style="margin-top: 50px; font-size: 80px;">12.4% TOTAL</div>
+      </div>
+
+       <!-- PANEL WIPE -->
+      <div id="wipe-panel" class="clip" style="width: 100%; height: 100%; background: var(--color-technical); left: -100%; z-index: 100;"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const brackets = [
+        { rate: "10%", height: 100 },
+        { rate: "12%", height: 150 },
+        { rate: "22%", height: 250 },
+        { rate: "24%", height: 320 },
+        { rate: "32%", height: 450 },
+        { rate: "35%", height: 550 },
+        { rate: "37%", height: 700, top: true }
+      ];
+
+      // Build Staircase HTML
+      const container = document.getElementById("stairs-container");
+      brackets.forEach((b, i) => {
+        const step = document.createElement("div");
+        step.className = `stair-step ${b.top ? 'top' : ''}`;
+        step.id = `step-${i}`;
+        step.style.height = `${b.height}px`;
+        step.innerHTML = `<div class="bracket-rate">${b.rate}</div>`;
+        container.appendChild(step);
+      });
+
+      // --- TIMELINE ---
+
+      // 1. Staircase Build (0s - 15s)
+      tl.from(".stair-step", { y: 1000, duration: 1.5, stagger: 0.2, ease: "expo.out" }, 1);
+      tl.from("#title-1", { x: -100, opacity: 0, duration: 1.2 }, 0.5);
+
+      // 2. Transition to Deduction (15s - 16s)
+      tl.to("#scene-staircase", { opacity: 0, scale: 0.9, duration: 1 }, 15);
+      tl.to("#scene-deduction", { opacity: 1, duration: 1 }, 15.5);
+
+      // 3. Deduction Shield Animation (16s - 30s)
+      tl.from("#main-shield", { scale: 1.5, opacity: 0, duration: 1.5, ease: "power4.out" }, 16);
+      tl.from("#income-block", { x: 1000, duration: 1.5, ease: "expo.out" }, 17);
+      // Collision "Hit"
+      tl.to("#income-block", { x: -20, duration: 0.1, yoyo: true, repeat: 1 }, 18.5);
+      tl.to("#main-shield", { scale: 1.05, duration: 0.1, yoyo: true, repeat: 1 }, 18.5);
+
+      // 4. Wipe to Payroll (30s - 31s)
+      tl.to("#wipe-panel", { left: "0%", duration: 0.8, ease: "power4.inOut" }, 30);
+      tl.set("#scene-deduction", { opacity: 0 }, 30.4);
+      tl.set("#scene-payroll", { opacity: 1 }, 30.4);
+      tl.to("#wipe-panel", { left: "100%", duration: 0.8, ease: "power4.inOut" }, 30.8);
+
+      // 5. Payroll Gears (31s - 50s)
+      tl.from(".gear", { scale: 0, rotation: -180, duration: 1.5, stagger: 0.5, ease: "back.out(1.7)" }, 31.5);
+      tl.to(".gear", { rotation: 360, duration: 20, ease: "none", repeat: -1 }, 33);
+      tl.from(".data-value", { y: 50, opacity: 0, duration: 1 }, 34);
+
+      // 6. Global analytical pressure
+      tl.to("#scene-payroll", { scale: 1.1, duration: 10, ease: "power1.inOut" }, 50);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

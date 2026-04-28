@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #1D3557; /* Legacy Navy */
+        --color-power: #E63946; /* Power Red */
+        --color-technical: #457B9D; /* Technical Blue */
+        --color-value: #FFB703; /* Value Gold */
+        --color-neutral: #F1FAEE; /* Off-white */
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Montserrat', sans-serif; color: var(--color-neutral);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+      
+      /* Typography */
+      .massive-title {
+        font-size: 140px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; line-height: 0.85;
+      }
+      .technical-label {
+        font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 300; text-transform: uppercase; letter-spacing: 0.4em; color: var(--color-technical);
+      }
+      .data-value {
+        font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 48px; color: var(--color-value);
+      }
+
+      /* Shapes */
+      .constitution-scroll {
+        fill: var(--color-neutral);
+      }
+      .slab {
+        width: 1200px; height: 150px; background: var(--color-technical); border-left: 20px solid var(--color-power); display: flex; align-items: center; padding: 0 50px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      }
+      .slab.state { background: #345e77; border-left-color: var(--color-value); }
+      .slab.local { background: #244152; border-left-color: var(--color-neutral); }
+
+      /* Background Elements */
+      .grid-lines {
+        position: absolute; inset: 0;
+        background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 100px 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div class="grid-lines"></div>
+
+      <!-- SCENE 1: COLD OPEN -->
+      <div id="scene-cold-open" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <svg id="constitution-svg" viewBox="0 0 400 500" style="width: 300px; margin-bottom: 50px;" class="clip">
+          <path class="constitution-scroll" d="M50 0 L350 0 C380 0 400 20 400 50 L400 450 C400 480 380 500 350 500 L50 500 C20 500 0 480 0 450 L0 50 C0 20 20 0 50 0 Z M50 50 L350 50 L350 450 L50 450 Z" />
+          <rect x="80" y="100" width="240" height="10" fill="#1D3557" />
+          <rect x="80" y="130" width="240" height="10" fill="#1D3557" />
+          <rect x="80" y="160" width="180" height="10" fill="#1D3557" />
+        </svg>
+
+        <h1 class="massive-title" id="title-1" style="text-align: center;">CONSTITUTION<br><span style="color: var(--color-power);">ON PAPER</span></h1>
+      </div>
+
+      <!-- SCENE 2: CASH CONSTITUTION -->
+      <div id="scene-cash" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transform: scale(1.2);">
+         <h1 class="massive-title" id="title-2" style="text-align: center;">CONSTITUTION<br><span style="color: var(--color-value);">IN CASH</span></h1>
+         <div id="coins-container" style="display: flex; gap: 20px; margin-top: 50px;">
+           <div class="coin" style="width: 80px; height: 80px; background: var(--color-value); border-radius: 50%; border: 4px solid #cc9900;"></div>
+           <div class="coin" style="width: 80px; height: 80px; background: var(--color-value); border-radius: 50%; border: 4px solid #cc9900;"></div>
+           <div class="coin" style="width: 80px; height: 80px; background: var(--color-value); border-radius: 50%; border: 4px solid #cc9900;"></div>
+         </div>
+      </div>
+
+      <!-- SCENE 3: THE MACHINE ARCHITECTURE -->
+      <div id="scene-stack" class="clip" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0;">
+        <p class="technical-label" style="margin-bottom: 20px;">SYSTEM_STRUCTURE_v2.0</p>
+        <div id="slab-container" style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="slab federal" id="slab-1">
+            <h2 class="massive-title" style="font-size: 60px;">FEDERAL SYSTEM</h2>
+            <div style="flex-grow: 1; text-align: right;" class="data-value">$2.68T INCOME</div>
+          </div>
+          <div class="slab state" id="slab-2">
+            <h2 class="massive-title" style="font-size: 60px;">STATE SYSTEM</h2>
+            <div style="flex-grow: 1; text-align: right;" class="data-value">$793B INCOME</div>
+          </div>
+          <div class="slab local" id="slab-3">
+            <h2 class="massive-title" style="font-size: 60px;">LOCAL SYSTEM</h2>
+            <div style="flex-grow: 1; text-align: right;" class="data-value">$805B PROPERTY</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 4: FEDERAL BREAKDOWN PIE -->
+      <div id="scene-pie" class="clip" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0;">
+        <div style="width: 800px; height: 800px; position: relative;">
+          <svg id="pie-svg" width="800" height="800" viewBox="0 0 800 800"></svg>
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <p class="technical-label" style="font-size: 18px;">TOTAL REVENUE</p>
+            <h2 class="massive-title" style="font-size: 100px;">$5.2T</h2>
+          </div>
+        </div>
+        <div id="pie-labels" style="margin-left: 100px; display: flex; flex-direction: column; gap: 30px;"></div>
+      </div>
+
+      <!-- PANEL WIPE -->
+      <div id="wipe-panel" class="clip" style="width: 100%; height: 100%; background: var(--color-power); left: -100%; z-index: 100;"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const fedData = [
+        { label: "INDIVIDUAL INCOME", value: 2684, color: "#E63946" },
+        { label: "PAYROLL TAXES", value: 1766, color: "#457B9D" },
+        { label: "CORPORATE INCOME", value: 456, color: "#FFB703" },
+        { label: "CUSTOMS / EXCISE / OTHER", value: 330, color: "#F1FAEE" }
+      ];
+
+      // --- TIMELINE DEFINITION ---
+
+      // 1. Cold Open (0s - 5s)
+      tl.from("#constitution-svg", { y: 100, opacity: 0, duration: 1.5, ease: "power4.out" }, 0.5);
+      tl.from("#title-1", { scale: 0.8, opacity: 0, duration: 1.5, ease: "power4.out" }, 0.8);
+      
+      // 2. Transition to Cash (5s - 10s)
+      tl.to("#scene-cold-open", { opacity: 0, scale: 0.8, duration: 1, ease: "power2.in" }, 4.5);
+      tl.to("#scene-cash", { opacity: 1, scale: 1, duration: 1.5, ease: "expo.out" }, 5);
+      tl.from(".coin", { y: -200, opacity: 0, duration: 1, stagger: 0.2, ease: "bounce.out" }, 5.5);
+
+      // 3. Panel Wipe to Stack (10s - 11s)
+      tl.to("#wipe-panel", { left: "0%", duration: 0.8, ease: "power4.inOut" }, 10);
+      tl.set("#scene-cash", { opacity: 0 }, 10.4);
+      tl.set("#scene-stack", { opacity: 1 }, 10.4);
+      tl.to("#wipe-panel", { left: "100%", duration: 0.8, ease: "power4.inOut" }, 10.8);
+
+      // 4. The Stack Build (11s - 20s)
+      tl.from(".slab", { x: -2000, duration: 1.2, stagger: 0.3, ease: "expo.out" }, 11.5);
+      tl.from(".data-value", { opacity: 0, x: 50, duration: 1, stagger: 0.3, ease: "power2.out" }, 12.5);
+
+      // 5. Transition to Pie Chart (20s - 21s)
+      tl.to("#scene-stack", { y: -1080, opacity: 0, duration: 1, ease: "power4.in" }, 20);
+      tl.to("#scene-pie", { opacity: 1, duration: 1 }, 20.5);
+
+      // 6. Pie Chart Build (21s - 35s)
+      const pie = d3.pie().value(d => d.value).sort(null);
+      const arcGen = d3.arc().innerRadius(280).outerRadius(380).cornerRadius(10);
+      const arcs = pie(fedData);
+      const pieG = d3.select("#pie-svg").append("g").attr("transform", "translate(400, 400)");
+
+      arcs.forEach((d, i) => {
+        const path = pieG.append("path")
+          .attr("fill", d.data.color)
+          .attr("stroke", "#1D3557")
+          .attr("stroke-width", "4px");
+
+        const proxy = { endAngle: d.startAngle };
+        tl.to(proxy, {
+          endAngle: d.endAngle,
+          duration: 1.5,
+          ease: "expo.inOut",
+          onUpdate: () => {
+            path.attr("d", arcGen({ ...d, endAngle: proxy.endAngle }));
+          }
+        }, 21 + (i * 0.4));
+
+        // Labels
+        const labelDiv = document.createElement("div");
+        labelDiv.innerHTML = `
+          <div style="display:flex; align-items:center; gap:20px;">
+            <div style="width:20px; height:20px; background:${d.data.color};"></div>
+            <div class="technical-label" style="font-size:18px;">${d.data.label}</div>
+          </div>
+          <div class="data-value" style="font-size:32px; padding-left:40px;">$${(d.data.value/1000).toFixed(2)}T</div>
+        `;
+        document.getElementById("pie-labels").appendChild(labelDiv);
+        tl.from(labelDiv, { x: 50, opacity: 0, duration: 0.8 }, 22 + (i * 0.4));
+      });
+
+      // 7. Final Zoom (Analytical Pressure) (35s - 45s)
+      tl.to("#scene-pie", { scale: 1.1, duration: 10, ease: "power1.inOut" }, 35);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
