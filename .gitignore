@@ -9,3 +9,4 @@ frame*.jpg
 help_utf8.txt
 node_modules
 renders
+*.zip
