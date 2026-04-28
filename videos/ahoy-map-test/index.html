@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #030712;
+        --color-panel: #111827;
+        --color-red: #E63946;
+        --color-gold: #FFB703;
+        --color-blue: #457B9D;
+        --color-steel: #1D3557;
+        --color-text: #F1FAEE;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--color-bg);
+        font-family: 'Outfit', sans-serif;
+        color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; }
+
+      /* Background Elements */
+      .bg-diagonal {
+        width: 2500px;
+        height: 1200px;
+        background: var(--color-panel);
+        transform: rotate(-15deg) translateY(-200px);
+        z-index: 1;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .bg-accent {
+        width: 2500px;
+        height: 10px;
+        background: var(--color-red);
+        transform: rotate(-15deg) translateY(400px);
+        z-index: 2;
+        opacity: 0.3;
+      }
+
+      /* Map Styling */
+      #map-container {
+        z-index: 5;
+        width: 1400px;
+        height: 900px;
+        top: 150px;
+        left: 260px;
+      }
+
+      #map-svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .map-path {
+        fill: var(--color-steel);
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 1.5;
+        opacity: 0.8;
+      }
+
+      .map-path-highlight {
+        fill: var(--color-red);
+        stroke: white;
+        stroke-width: 2;
+        opacity: 0;
+      }
+
+      /* Typography */
+      .massive-header {
+        font-size: 240px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 0.8;
+        z-index: 10;
+        top: 80px;
+        left: 80px;
+        text-shadow: 20px 20px 0px rgba(0,0,0,0.5);
+      }
+
+      .massive-header span {
+        color: var(--color-red);
+      }
+
+      .sub-header {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 42px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 0.5em;
+        top: 300px;
+        left: 90px;
+        z-index: 10;
+        color: var(--color-blue);
+      }
+
+      /* Callouts */
+      .hit-box {
+        background: var(--color-text);
+        color: #000;
+        padding: 10px 20px;
+        font-weight: 900;
+        font-size: 28px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+        transform: rotate(-2deg);
+      }
+
+      .hit-marker {
+        width: 15px;
+        height: 15px;
+        background: var(--color-red);
+      }
+
+      /* Panel Wipe */
+      #wipe {
+        width: 100%;
+        height: 100%;
+        background: var(--color-red);
+        z-index: 100;
+      }
+
+      #wipe-2 {
+        width: 100%;
+        height: 100%;
+        background: var(--color-gold);
+        z-index: 99;
+      }
+
+      .label-small {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-blue);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <!-- Background Layers -->
+      <div class="bg-diagonal clip"></div>
+      <div class="bg-accent clip"></div>
+
+      <!-- Transitions (Invisible at start) -->
+      <div id="wipe" class="clip"></div>
+      <div id="wipe-2" class="clip"></div>
+
+      <!-- Header Content -->
+      <div class="sub-header clip" id="sub-header" data-start="0.5" data-duration="14.5" data-track-index="1">
+        STRATEGIC ANALYSIS // HF-MAP-02
+      </div>
+      <h1 class="massive-header clip" id="main-header" data-start="0.8" data-duration="14.2" data-track-index="2">
+        GLOBAL<span>.</span><br>REACH
+      </h1>
+
+      <!-- Map Display -->
+      <div id="map-container" class="clip">
+        <svg id="map-svg" class="clip" data-start="1.5" data-duration="13.5" data-track-index="3">
+          <g id="map-g"></g>
+          <g id="highlight-g"></g>
+        </svg>
+      </div>
+
+      <div id="callouts"></div>
+
+      <!-- Bottom Info -->
+      <div class="clip" style="bottom: 80px; left: 80px; z-index: 10;" data-start="3" data-duration="12" data-track-index="4">
+        <div class="label-small">DATA SOURCE: GEOGRAPHICAL ARCHIVE 2026</div>
+        <div style="width: 400px; height: 4px; background: var(--color-red); margin-top: 10px;"></div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Initial Transitions (Wipe in)
+      tl.set("#wipe", { xPercent: -100 });
+      tl.set("#wipe-2", { xPercent: -100 });
+
+      tl.fromTo("#wipe", { xPercent: 0 }, { xPercent: 100, duration: 1.2, ease: "power4.inOut" }, 0);
+      tl.fromTo("#wipe-2", { xPercent: 0 }, { xPercent: 100, duration: 1.5, ease: "power4.inOut" }, 0);
+
+      // 2. Text "Hits"
+      tl.from("#sub-header", { x: -50, opacity: 0, duration: 1, ease: "expo.out" }, 0.5);
+      tl.from("#main-header", { y: 100, opacity: 0, rotation: 5, duration: 1.5, ease: "expo.out" }, 0.8);
+
+      // 3. Map Initialization
+      async function initMap() {
+        try {
+          const response = await fetch('assets/usa.geojson');
+          const data = await response.json();
+
+          const width = 1400;
+          const height = 900;
+
+          const projection = d3.geoAlbersUsa().fitSize([width, height], data);
+          const pathGenerator = d3.geoPath().projection(projection);
+
+          const g = d3.select("#map-g");
+          const hg = d3.select("#highlight-g");
+
+          // Draw Base Map
+          g.selectAll(".map-path")
+            .data(data.features)
+            .enter()
+            .append("path")
+            .attr("class", "map-path")
+            .attr("d", pathGenerator);
+
+          tl.from(".map-path", {
+            opacity: 0,
+            scale: 0.9,
+            stagger: 0.002,
+            duration: 1.5,
+            ease: "expo.out"
+          }, 1.5);
+
+          // 4. Historic Zoom
+          tl.to("#map-container", {
+            scale: 1.15,
+            duration: 13.5,
+            ease: "none"
+          }, 1.5);
+
+          // 5. Strategic "Hits" (City Callouts)
+          const strategicPoints = [
+            { name: "Command Center", coords: [-77.0369, 38.9072], start: 4, color: "var(--color-red)" },
+            { name: "Economic Hub", coords: [-74.0060, 40.7128], start: 5.5, color: "var(--color-gold)" },
+            { name: "Western Outpost", coords: [-118.2437, 34.0522], start: 7, color: "var(--color-blue)" }
+          ];
+
+          strategicPoints.forEach((pt, idx) => {
+            const [x, y] = projection(pt.coords);
+            if (x && y) {
+              const callout = document.createElement('div');
+              callout.className = 'clip';
+              callout.style.left = (260 + x) + 'px'; // Container offset
+              callout.style.top = (150 + y) + 'px';
+              callout.innerHTML = `
+                <div class="hit-box" id="hit-${idx}">
+                  <div class="hit-marker" style="background: ${pt.color}"></div>
+                  ${pt.name}
+                </div>
+              `;
+              document.querySelector("#callouts").appendChild(callout);
+              
+              tl.from(`#hit-${idx}`, { 
+                scale: 0, 
+                rotation: 15,
+                opacity: 0,
+                duration: 1, 
+                ease: "expo.out" 
+              }, pt.start);
+
+              // Add a pulse to the marker
+              tl.to(`#hit-${idx} .hit-marker`, {
+                scale: 1.5,
+                duration: 0.5,
+                repeat: 3,
+                yoyo: true,
+                ease: "sine.inOut"
+              }, pt.start + 0.5);
+            }
+          });
+
+          // 6. Final Territorial Flood (Wipe out)
+          tl.to("#wipe", { x: "0%", duration: 1.2, ease: "power4.inOut" }, 13.8);
+
+        } catch (e) {
+          console.error("Map Load Error:", e);
+        }
+      }
+
+      initMap();
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

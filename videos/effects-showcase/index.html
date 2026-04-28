@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-blueprint: #219EBC;
+        --color-bg: #023047;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: #000;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+      /* CONTENT LAYER */
+      #base-layer {
+        z-index: 10;
+        background: radial-gradient(circle at 50% 50%, #457B9D, #1D3557);
+        display: flex; align-items: center; justify-content: center;
+        mask-image: url(#scorch-mask); /* SVG Mask */
+        -webkit-mask-image: url(#scorch-mask);
+      }
+
+      /* SCANLINES LAYER (Pattern based) */
+      #scanline-overlay {
+        z-index: 50;
+        pointer-events: none;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP7F6VAAAAD0lEQVR42mNkYGA4wMAAAAYAAp36Z8AAAAAASUVORK5CYII=');
+        background-size: 100% 4px;
+        opacity: 0.15;
+        mix-blend-mode: overlay;
+      }
+
+      /* VIGNETTE */
+      #vignette {
+        z-index: 60;
+        background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+        pointer-events: none;
+      }
+
+      #damage-canvas {
+        z-index: 70;
+        pointer-events: none;
+      }
+
+      .title-box {
+        text-align: center; color: white;
+      }
+      .title-box h1 { font-family: 'Outfit', sans-serif; font-size: 180px; line-height: 0.8; letter-spacing: -5px; }
+      .title-box p { font-size: 30px; letter-spacing: 15px; text-transform: uppercase; opacity: 0.6; margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      
+      <!-- SVG FILTERS & MASKS -->
+      <svg width="0" height="0" style="position: absolute;">
+        <defs>
+          <!-- THE SCORCH MASK -->
+          <mask id="scorch-mask-def">
+            <g id="mask-group">
+                <circle id="mask-circle" cx="960" cy="540" r="0" fill="white" filter="url(#rough-edge)" />
+            </g>
+          </mask>
+          
+          <!-- ROUGH EDGE FILTER FOR SCORCH -->
+          <filter id="rough-edge">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+
+          <!-- CRT BULGE -->
+          <filter id="bulge-filter">
+             <feGaussianBlur stdDeviation="1" />
+             <feComponentTransfer>
+                <feFuncA type="linear" slope="1.2" />
+             </feComponentTransfer>
+          </filter>
+        </defs>
+      </svg>
+
+      <div id="base-layer" class="clip" style="mask: url(#scorch-mask-def); -webkit-mask: url(#scorch-mask-def);">
+          <div id="content-container" class="title-box">
+             <h1>PREMIUM<br>STUDIO</h1>
+             <p>Archival Systems v4.0</p>
+             <!-- Sketchy details -->
+             <svg width="600" height="200" style="margin-top: 50px; stroke: white; stroke-width: 1; fill: none; opacity: 0.3;">
+                <path d="M0,100 L600,100 M100,0 L100,200 M500,0 L500,200" />
+                <circle cx="300" cy="100" r="80" stroke-dasharray="5 5" />
+             </svg>
+          </div>
+      </div>
+
+      <div id="scanline-overlay" class="clip"></div>
+      <div id="vignette" class="clip"></div>
+      
+      <canvas id="damage-canvas" width="1920" height="1080" class="clip"></canvas>
+
+      <div class="clip" style="top: 40px; left: 40px; color: #aaa; font-size: 12px; letter-spacing: 4px;">
+        PP_STATUS: [VERIFIED] // AGENTIC_RENDER_CORE_V4
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const canvas = document.getElementById('damage-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // 1. SCORCH REVEAL
+      tl.to("#mask-circle", { attr: { r: 1200 }, duration: 5, ease: "power2.inOut" }, 0);
+
+      // 2. SCANLINE DRIFT
+      tl.to("#scanline-overlay", { backgroundPosition: "0 100px", duration: 10, ease: "none" }, 0);
+
+      // 3. CAMERA DYNAMISM
+      tl.fromTo("#content-container", { scale: 1.1, rotation: 1 }, { scale: 1.0, rotation: -1, duration: 10, ease: "sine.inOut" }, 0);
+
+      // 4. PROCEDURAL DAMAGE (BLACK GUNK)
+      // We will use a proxy to trigger canvas draws
+      const damageProxy = { frame: 0 };
+      tl.to(damageProxy, {
+        frame: 300,
+        duration: 10,
+        ease: "none",
+        onUpdate: function() {
+            ctx.clearRect(0, 0, 1920, 1080);
+            ctx.fillStyle = "rgba(0,0,0,0.7)";
+            ctx.strokeStyle = "rgba(0,0,0,0.5)";
+            
+            // Random dust
+            for(let i=0; i<3; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random()*1920, Math.random()*1080, Math.random()*3, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            // Random hair/scratch
+            if(Math.random() > 0.8) {
+                ctx.beginPath();
+                const x = Math.random()*1920;
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x + (Math.random()-0.5)*20, 1080);
+                ctx.stroke();
+            }
+        }
+      }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

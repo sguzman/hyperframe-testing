@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg-light: #4169E1;
+        --color-bg-dark: #1D3557;
+        --color-line: rgba(255, 255, 255, 0.6);
+        --color-line-bold: rgba(255, 255, 255, 0.9);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: radial-gradient(circle at 30% 30%, var(--color-bg-light), var(--color-bg-dark));
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; }
+
+      /* Technical Drawing Elements */
+      .blueprint-svg {
+        width: 100%; height: 100%;
+        stroke: var(--color-line);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .hatch-pattern {
+        fill: url(#hatch);
+      }
+
+      .dim-text {
+        font-size: 14px; fill: var(--color-line-bold); font-weight: 300;
+      }
+
+      /* Noise Overlay */
+      .grain {
+        width: 100%; height: 100%;
+        opacity: 0.1;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      
+      <svg class="blueprint-svg clip">
+        <defs>
+          <pattern id="hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="10" stroke="rgba(255,255,255,0.4)" stroke-width="1" />
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        <rect width="100%" height="100%" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+        
+        <!-- Large Gear Group -->
+        <g id="gear-group" transform="translate(400, 400)">
+            <!-- Outer Circle -->
+            <circle r="300" stroke-dasharray="10 5" />
+            <circle r="250" />
+            <!-- Inner Gear -->
+            <path id="gear-main" d="M100,0 L95,15 L80,15 L70,30 L55,25 L45,40 L30,30 L20,45 L5,35 L-5,45 L-20,35 L-30,45 L-45,35 L-55,45 L-70,35 L-80,45 L-95,35 L-100,50 L-100,-50 L-95,-35 L-80,-45 L-70,-35 L-55,-45 L-45,-35 L-30,-45 L-20,-35 L-5,-45 L5,-35 L20,-45 L30,-35 L45,-45 L55,-35 L70,-45 L80,-35 L95,-45 Z" transform="scale(1.5)" />
+            <circle r="100" class="hatch-pattern" />
+        </g>
+
+        <!-- Floating Schematics -->
+        <g id="schematic-1" transform="translate(1200, 200)">
+            <rect x="0" y="0" width="400" height="150" />
+            <line x1="0" y1="75" x2="400" y2="75" stroke-dasharray="5 5" />
+            <text x="10" y="-10" class="dim-text">22.244 mm</text>
+            <path d="M400,75 L420,75 M410,65 L410,85" />
+        </g>
+
+        <g id="schematic-2" transform="translate(1300, 600)">
+            <circle r="80" />
+            <circle r="60" stroke-dasharray="2 2" />
+            <line x1="-120" y1="0" x2="120" y2="0" stroke-dasharray="10 10" />
+            <line x1="0" y1="-120" x2="0" y2="120" stroke-dasharray="10 10" />
+            <rect x="-100" y="-100" width="200" height="200" stroke-width="0.5" />
+        </g>
+
+        <!-- Hatch Filled Regions -->
+        <rect x="1500" y="800" width="300" height="200" class="hatch-pattern" stroke="white" />
+        <polygon points="100,800 300,800 200,1000" class="hatch-pattern" stroke="white" />
+
+      </svg>
+
+      <div class="grain clip"></div>
+
+      <div class="clip" style="bottom: 40px; left: 40px; color: white; opacity: 0.5; font-size: 12px; letter-spacing: 2px;">
+        REF_DOC: 882-SCHEMATIC-B // CLASS_A_SPEC
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Gear Rotation
+      tl.to("#gear-main", { rotation: 360, duration: 15, ease: "none" }, 0);
+      tl.to("#gear-group circle[stroke-dasharray]", { rotation: -360, duration: 30, ease: "none" }, 0);
+
+      // 2. Camera Drift
+      tl.fromTo("#root svg", { x: -20, y: -20, scale: 1 }, { x: 0, y: 0, scale: 1.05, duration: 15, ease: "sine.inOut" }, 0);
+
+      // 3. Schematic Reveal
+      tl.from("#schematic-1", { x: "+=100", opacity: 0, duration: 2, ease: "expo.out" }, 1);
+      tl.from("#schematic-2", { scale: 0, opacity: 0, duration: 1.5, ease: "back.out(1.7)" }, 2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

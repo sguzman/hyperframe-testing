@@ -4,4 +4,8 @@ tmp
 out
 *.mp4
 frame*.jpg
-*.zip
+*.zipnode_modules
+.DS_Store
+help_utf8.txt
+node_modules
+renders

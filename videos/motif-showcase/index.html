@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #030712;
+        --color-red: #E63946;
+        --color-gold: #FFB703;
+        --color-blue: #457B9D;
+        --color-steel: #1D3557;
+        --color-text: #F1FAEE;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px;
+        overflow: hidden; background: var(--color-bg);
+        font-family: 'Outfit', sans-serif; color: var(--color-text);
+      }
+
+      #root { position: relative; width: 100%; height: 100%; }
+      .clip { position: absolute; }
+      .scene { width: 100%; height: 100%; display: none; }
+      .scene.active { display: block; }
+
+      /* Motif 1: Hatch Fill */
+      .hatch-box {
+        width: 600px; height: 400px;
+        background: var(--color-red);
+        mask-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 0, transparent 8px);
+        -webkit-mask-image: repeating-linear-gradient(45deg, #000 0, #000 2px, transparent 0, transparent 8px);
+      }
+
+      /* Motif 2: Coordinate Grid */
+      .grid-bg {
+        width: 100%; height: 100%;
+        background-image: 
+          linear-gradient(to right, rgba(69, 123, 157, 0.1) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(69, 123, 157, 0.1) 1px, transparent 1px);
+        background-size: 100px 100px;
+      }
+      .coord-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 12px; color: var(--color-blue);
+        opacity: 0.5;
+      }
+
+      /* Motif 3: Dossier Slash */
+      .slash-container {
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .slash-bg {
+        width: 100%; height: 100%;
+        background: var(--color-steel);
+        clip-path: polygon(0 0, 60% 0, 40% 100%, 0% 100%);
+      }
+      .slash-accent {
+        width: 100%; height: 100%;
+        background: var(--color-red);
+        clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%);
+      }
+
+      /* Motif 4: Data Ribbon */
+      .ribbon {
+        width: 60px; height: 100%;
+        background: rgba(0,0,0,0.5);
+        border-right: 1px solid var(--color-blue);
+        overflow: hidden;
+      }
+      .ribbon-content {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 14px; color: var(--color-blue);
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        letter-spacing: 5px;
+      }
+
+      /* Motif 5: Stamp Hit */
+      .stamp-text {
+        font-size: 200px; font-weight: 900;
+        color: var(--color-text);
+        text-shadow: 15px 15px 0px var(--color-red);
+      }
+
+      .label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 24px; letter-spacing: 0.4em;
+        text-transform: uppercase; color: var(--color-gold);
+        bottom: 50px; left: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="25" data-width="1920" data-height="1080">
+      
+      <!-- SCENE 1: HATCH FILL -->
+      <div id="scene-1" class="scene active clip" data-start="0" data-duration="5">
+        <div class="grid-bg clip"></div>
+        <div class="hatch-box clip" id="hatch-1" style="top: 340px; left: 660px;"></div>
+        <div class="label clip">MOTIF 01 // HATCH FILL MASKING</div>
+      </div>
+
+      <!-- SCENE 2: COORDINATE GRID -->
+      <div id="scene-2" class="scene clip" data-start="5" data-duration="5">
+        <div class="grid-bg clip" style="background-size: 50px 50px;"></div>
+        <div id="coords-container"></div>
+        <div class="label clip">MOTIF 02 // TACTICAL GRID PULSE</div>
+      </div>
+
+      <!-- SCENE 3: DOSSIER SLASH -->
+      <div id="scene-3" class="scene clip" data-start="10" data-duration="5">
+        <div class="slash-bg clip"></div>
+        <div class="slash-accent clip"></div>
+        <div class="clip" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+            <h1 style="font-size: 180px; text-align: center; line-height: 0.9;">DOSSIER<br>REVEAL</h1>
+        </div>
+        <div class="label clip">MOTIF 03 // DIAGONAL SLASH BREAK</div>
+      </div>
+
+      <!-- SCENE 4: DATA RIBBON -->
+      <div id="scene-4" class="scene clip" data-start="15" data-duration="5">
+        <div class="ribbon clip" style="left: 0;">
+            <div class="ribbon-content" id="ribbon-1"></div>
+        </div>
+        <div class="ribbon clip" style="right: 0; border-right: none; border-left: 1px solid var(--color-blue);">
+            <div class="ribbon-content" id="ribbon-2"></div>
+        </div>
+        <div class="label clip" style="left: 100px;">MOTIF 04 // ASYNC DATA RIBBON</div>
+      </div>
+
+      <!-- SCENE 5: STAMP HIT -->
+      <div id="scene-5" class="scene clip" data-start="20" data-duration="5">
+        <div class="clip" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+            <h1 class="stamp-text" id="stamp-target">CONFIRMED</h1>
+        </div>
+        <div class="label clip">MOTIF 05 // KINETIC STAMP IMPACT</div>
+      </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Scene Management
+      const scenes = [1, 2, 3, 4, 5];
+      scenes.forEach(s => {
+        tl.set(`#scene-${s}`, { display: 'block' }, (s-1)*5);
+        if (s < 5) tl.set(`#scene-${s}`, { display: 'none' }, s*5);
+      });
+
+      // 1. Hatch Animation
+      tl.from("#hatch-1", { scaleX: 0, duration: 1, ease: "expo.out" }, 0.5);
+      tl.to("#hatch-1", { rotation: 90, duration: 4, ease: "none" }, 1);
+
+      // 2. Grid Pulse & Coords
+      const coordsCont = document.getElementById('coords-container');
+      for(let i=0; i<10; i++) {
+        const x = Math.random() * 1800;
+        const y = Math.random() * 900;
+        const div = document.createElement('div');
+        div.className = 'clip coord-label';
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.id = `coord-${i}`;
+        div.innerText = `[${Math.floor(x)}:${Math.floor(y)}]`;
+        coordsCont.appendChild(div);
+        
+        tl.from(`#coord-${i}`, { opacity: 0, duration: 0.5, ease: "power2.in" }, 5 + (i*0.2));
+      }
+
+      // 3. Slash Animation
+      tl.from(".slash-bg", { xPercent: -100, duration: 1, ease: "power4.inOut" }, 10);
+      tl.from(".slash-accent", { xPercent: 100, duration: 1, ease: "power4.inOut" }, 10.2);
+      tl.from("#scene-3 h1", { scale: 0.8, opacity: 0, duration: 1, ease: "expo.out" }, 11);
+
+      // 4. Ribbon Flow
+      const ribbonText = "010111001010101110100101010111010101110101010101011101010101110101010101011101010101110101010101";
+      document.getElementById('ribbon-1').innerText = ribbonText;
+      document.getElementById('ribbon-2').innerText = ribbonText;
+      tl.fromTo("#ribbon-1", { y: 0 }, { y: -500, duration: 5, ease: "none" }, 15);
+      tl.fromTo("#ribbon-2", { y: -500 }, { y: 0, duration: 5, ease: "none" }, 15);
+
+      // 5. Stamp Impact
+      tl.from("#stamp-target", { 
+        scale: 3, 
+        opacity: 0, 
+        filter: "blur(20px)",
+        duration: 0.4, 
+        ease: "power2.in" 
+      }, 20.5);
+      tl.to("#stamp-target", { 
+        scale: 1, 
+        duration: 0.2, 
+        ease: "bounce.out" 
+      }, 20.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
