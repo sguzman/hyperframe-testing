@@ -1,0 +1,17 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base steps -->
+  <rect x="20" y="240" width="360" height="40" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <rect x="40" y="220" width="320" height="20" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <!-- Columns -->
+  <rect x="100" y="160" width="10" height="60" fill="#1D3557"/>
+  <rect x="130" y="160" width="10" height="60" fill="#1D3557"/>
+  <rect x="260" y="160" width="10" height="60" fill="#1D3557"/>
+  <rect x="290" y="160" width="10" height="60" fill="#1D3557"/>
+  <!-- Middle structure -->
+  <rect x="80" y="150" width="240" height="70" fill="#F1FAEE" stroke="#1D3557" stroke-width="4"/>
+  <!-- Dome -->
+  <rect x="160" y="130" width="80" height="20" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <path d="M160 130 A 40 40 0 0 1 240 130" fill="#F1FAEE" stroke="#1D3557" stroke-width="4"/>
+  <!-- Top stick -->
+  <rect x="195" y="70" width="10" height="20" fill="#1D3557"/>
+</svg>
