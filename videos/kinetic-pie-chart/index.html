@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #111111;
+        --color-accent: #E63946; /* Power/Ideology Red */
+        --color-technical: #457B9D; /* Technical Blue */
+        --color-text: #F1FAEE;
+        --color-gray: #2d3436;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Space Grotesk', sans-serif; color: var(--color-text);
+      }
+      #root { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+      .clip { position: absolute; }
+      
+      /* Typography */
+      .main-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 120px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        position: absolute;
+        top: 80px;
+        left: 100px;
+        color: var(--color-text);
+      }
+
+      .technical-subtitle {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 24px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 0.5em;
+        position: absolute;
+        top: 220px;
+        left: 105px;
+        color: var(--color-technical);
+      }
+
+      /* Chart styling */
+      .chart-svg {
+        filter: drop-shadow(0 0 30px rgba(0,0,0,0.5));
+      }
+      
+      .wedge {
+        stroke: var(--color-bg);
+        stroke-width: 4px;
+      }
+
+      /* Callout labels */
+      .callout {
+        position: absolute;
+        pointer-events: none;
+      }
+      
+      .callout-line {
+        stroke: var(--color-text);
+        stroke-width: 2px;
+        fill: none;
+        opacity: 0.4;
+      }
+
+      .callout-box {
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 4px solid var(--color-text);
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .callout-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 28px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .callout-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 20px;
+        opacity: 0.7;
+      }
+
+      /* Decorative Elements */
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: -1;
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      <div class="grid"></div>
+      <div class="vignette"></div>
+
+      <h1 class="main-title" id="title">SYSTEM ALLOCATION</h1>
+      <p class="technical-subtitle" id="subtitle">RESOURCE DISTRIBUTION MODULE 04</p>
+      
+      <!-- Central Chart Container -->
+      <div style="position: relative; width: 1000px; height: 1000px;">
+        <svg id="chart-svg" class="chart-svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+          <g id="chart-g" transform="translate(500, 500)"></g>
+          <g id="callouts-g" transform="translate(500, 500)"></g>
+        </svg>
+        
+        <div id="callouts-html" style="position: absolute; inset: 0; pointer-events: none;"></div>
+      </div>
+
+      <!-- Bottom Status Bar -->
+      <div style="position: absolute; bottom: 50px; left: 100px; right: 100px; height: 2px; background: rgba(255,255,255,0.1);">
+        <div style="position: absolute; left: 0; top: -10px; font-family: 'Space Grotesk'; font-size: 14px; opacity: 0.4;">DATASETSET_01.ARC</div>
+        <div style="position: absolute; right: 0; top: -10px; font-family: 'Space Grotesk'; font-size: 14px; opacity: 0.4;">SECURE_LINK_ACTIVE</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const data = [
+        { label: "CORE SYSTEMS", value: 40, color: "#E63946" },
+        { label: "LOGIC GRID", value: 30, color: "#457B9D" },
+        { label: "BUFFER ZONE", value: 20, color: "#A8DADC" },
+        { label: "LEGACY NODES", value: 10, color: "#1D3557" }
+      ];
+
+      // Configuration
+      const outerRadius = 350;
+      const innerRadius = 200; // Donut style
+      const padAngle = 0.05;
+
+      // 1. Initial State & Title Animation
+      tl.from("#title", { x: -100, opacity: 0, duration: 1.2, ease: "expo.out" }, 0.5);
+      tl.from("#subtitle", { x: -50, opacity: 0, duration: 1.2, ease: "expo.out" }, 0.7);
+
+      // 2. Setup D3 Pie
+      const pie = d3.pie()
+        .value(d => d.value)
+        .sort(null)
+        .padAngle(padAngle);
+
+      const arcs = pie(data);
+      const arcGen = d3.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius)
+        .cornerRadius(8);
+
+      const g = d3.select("#chart-g");
+      const calloutsG = d3.select("#callouts-g");
+      const calloutsHtml = document.getElementById("callouts-html");
+
+      // To fix the "overlap" and "incomplete circle" issue:
+      // We will draw the segments correctly using D3's calculated angles.
+      // We will animate them by interpolating from startAngle to endAngle.
+
+      arcs.forEach((d, i) => {
+        // Create path
+        const path = g.append("path")
+          .attr("class", "wedge")
+          .attr("id", "wedge-" + i)
+          .attr("fill", d.data.color);
+
+        // Animation Proxy for the path
+        const proxy = { endAngle: d.startAngle };
+        
+        tl.to(proxy, {
+          endAngle: d.endAngle,
+          duration: 1.5,
+          ease: "expo.inOut",
+          onUpdate: () => {
+            path.attr("d", arcGen({
+              ...d,
+              endAngle: proxy.endAngle
+            }));
+          }
+        }, 1.0 + (i * 0.2));
+
+        // Create Callout
+        const [x1, y1] = d3.arc().innerRadius(outerRadius).outerRadius(outerRadius).centroid(d);
+        const [x2, y2] = d3.arc().innerRadius(outerRadius + 80).outerRadius(outerRadius + 80).centroid(d);
+        
+        // Callout Line (SVG)
+        const line = calloutsG.append("polyline")
+          .attr("class", "callout-line")
+          .attr("points", `${x1},${y1} ${x2},${y2}`)
+          .style("opacity", 0);
+
+        // Callout Box (HTML)
+        const box = document.createElement("div");
+        box.className = "callout-box clip";
+        box.innerHTML = `
+          <div class="callout-label">${d.data.label}</div>
+          <div class="callout-value">${d.data.value}% ALLOCATION</div>
+        `;
+        
+        // Position Box
+        gsap.set(box, {
+          left: 500 + x2,
+          top: 500 + y2,
+          x: x2 > 0 ? 10 : -100, // Offset based on side
+          xPercent: x2 > 0 ? 0 : -100,
+          yPercent: -50
+        });
+        
+        calloutsHtml.appendChild(box);
+
+        // Animate Callout
+        tl.to(line.node(), { opacity: 0.4, duration: 0.5 }, 2.0 + (i * 0.2));
+        tl.from(box, { 
+          opacity: 0, 
+          x: x2 > 0 ? -20 : 20, 
+          duration: 0.8, 
+          ease: "expo.out" 
+        }, 2.1 + (i * 0.2));
+      });
+
+      // 3. Global Rotation (Slow analytical pressure)
+      tl.to("#chart-g", { 
+        rotation: 360, 
+        duration: 40, 
+        ease: "none" 
+      }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
