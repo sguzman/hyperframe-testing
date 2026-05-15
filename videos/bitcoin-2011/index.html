@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js"></script>
+    <style>
+      :root {
+        --color-bg: #000000;
+        --color-up: #2ECC71;
+        --color-down: #E74C3C;
+        --color-text: #FFFFFF;
+        --color-accent: #F1C40F;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: var(--color-bg); font-family: 'Space Grotesk', sans-serif; color: var(--color-text);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      
+      .year-display {
+        position: absolute; top: 50px; left: 100px;
+        font-family: 'Montserrat', sans-serif; font-size: 120px; font-weight: 900;
+        opacity: 0.8;
+      }
+      
+      .price-display {
+        position: absolute; top: 50px; right: 100px;
+        font-size: 80px; font-weight: 700; text-align: right;
+      }
+      
+      #house-container {
+        position: absolute; bottom: 0; left: 50%;
+        width: 800px; height: 800px;
+        z-index: 1;
+        opacity: 0.5;
+      }
+      
+      #soyjak-container {
+        position: absolute; bottom: 100px; left: 50%;
+        width: 500px; height: 500px;
+        z-index: 2;
+      }
+      
+      #soyjak-img {
+        width: 100%; height: 100%;
+        object-fit: contain;
+      }
+      
+      #chart-container {
+        position: absolute; bottom: 0; left: 0; width: 100%; height: 600px;
+        z-index: 0; opacity: 0.4;
+      }
+      
+      .chart-line {
+        fill: none; stroke: var(--color-accent); stroke-width: 12px;
+        stroke-linecap: round; stroke-linejoin: round;
+      }
+
+      .grid-lines {
+        position: absolute; inset: 0;
+        background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 100px 100px;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      <div class="grid-lines"></div>
+      <div id="chart-container">
+        <svg id="chart-svg" width="1920" height="600" viewBox="0 0 1920 600"></svg>
+      </div>
+      
+      <div id="house-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%" style="color: #555; fill: none;">
+          <path d="M10 90 L10 40 L50 10 L90 40 L90 90 Z" stroke="currentColor" stroke-width="2"/>
+          <rect x="40" y="60" width="20" height="30" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </div>
+      
+      <div id="soyjak-container">
+        <img id="soyjak-img" src="../../assets/memes/happy-soyjak.png" />
+      </div>
+      
+      <div class="year-display" id="year-text">YEAR</div>
+      <div class="price-display" id="price-text">$0.00</div>
+    </div>
+
+    <script>
+      // Data will be injected by the generator script
+      // const yearData = [[date, price], ...];
+      // const year = "2011";
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      document.getElementById('year-text').innerText = typeof year !== 'undefined' ? year : '2011';
+      
+      gsap.set("#house-container", { xPercent: -50 });
+      gsap.set("#soyjak-container", { xPercent: -50 });
+
+      if (typeof yearData !== 'undefined' && yearData.length > 0) {
+        const svg = d3.select("#chart-svg");
+        const width = 1920;
+        const height = 600;
+        
+        const x = d3.scaleLinear().domain([0, yearData.length - 1]).range([0, width]);
+        const y = d3.scaleLinear()
+          .domain([d3.min(yearData, d => d[1]) * 0.9, d3.max(yearData, d => d[1]) * 1.1])
+          .range([height, 50]);
+        
+        const line = d3.line()
+          .x((d, i) => x(i))
+          .y(d => y(d[1]));
+
+        const path = svg.append("path")
+          .datum(yearData)
+          .attr("class", "chart-line")
+          .attr("d", line);
+
+        const totalLength = path.node().getTotalLength();
+        path.attr("stroke-dasharray", totalLength + " " + totalLength)
+          .attr("stroke-dashoffset", totalLength);
+
+        // Animation
+        tl.to(path, {
+          attr: { "stroke-dashoffset": 0 },
+          duration: 12,
+          ease: "none"
+        }, 1);
+
+        // Price and Soyjak update
+        yearData.forEach((d, i) => {
+          const time = 1 + (i / yearData.length) * 12;
+          const price = d[1];
+          const prevPrice = i > 0 ? yearData[i-1][1] : price;
+          
+          tl.set("#price-text", {
+            innerText: "$" + price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+          }, time);
+          
+          tl.set("#price-text", {
+            color: price >= prevPrice ? "#2ECC71" : "#E74C3C"
+          }, time);
+
+          tl.set("#soyjak-img", {
+            attr: { src: price >= prevPrice ? "../../assets/memes/happy-soyjak.png" : "../../assets/memes/west-has-fallen.png" }
+          }, time);
+        });
+      }
+
+      // Character bounce
+      const cycleDuration = 0.6;
+      const totalDuration = 15;
+      tl.to("#soyjak-container", {
+        y: -30,
+        repeat: Math.floor(totalDuration / cycleDuration) - 1,
+        yoyo: true,
+        duration: cycleDuration,
+        ease: "sine.inOut"
+      }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+
+  </body>
+</html>
