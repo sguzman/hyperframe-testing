@@ -83,6 +83,7 @@ Object.keys(groupedData).forEach(year => {
   const finalHtml = template
     .replace('const yearData = [];', `const yearData = ${dataString};`)
     .replace('const year = "20XX";', `const year = "${year}";`)
+    .replace('data-duration="15"', `data-duration="${totalDuration}"`)
     .replace('<!-- AUDIO_TAGS_HERE -->', audioHtml);
 
   fs.writeFileSync(path.join(yearDir, 'index.html'), finalHtml);
