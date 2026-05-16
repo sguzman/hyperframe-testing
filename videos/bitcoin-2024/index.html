@@ -54,7 +54,7 @@
       }
       
       #house-container {
-        position: absolute; bottom: 0; left: 50%;
+        position: absolute; bottom: 80px; left: 50%;
         width: 800px; height: 800px;
         z-index: 1;
         opacity: 0.5;
@@ -72,8 +72,8 @@
       }
       
       #chart-container {
-        position: absolute; bottom: 0; left: 0; width: 100%; height: 600px;
-        z-index: 0; opacity: 0.4;
+        position: absolute; bottom: 0; left: 0; width: 0%; height: 600px;
+        z-index: 0; opacity: 0.4; overflow: hidden;
       }
       
       .chart-line {
@@ -110,6 +110,14 @@
 
       <div id="rainy-elements" style="position: absolute; inset: 0; z-index: -1; opacity: 0;">
         <div style="position: absolute; inset: 0; background: repeating-linear-gradient(15deg, transparent, transparent 10px, rgba(255,255,255,0.15) 11px, rgba(255,255,255,0.15) 13px);"></div>
+        <!-- Dark Clouds -->
+        <svg style="position: absolute; top: 100px; left: 150px; width: 500px; height: 250px;" viewBox="0 0 100 50">
+          <path d="M20 30 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#4a5568" opacity="0.9" />
+          <path d="M40 35 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#2d3748" opacity="0.9" />
+        </svg>
+        <svg style="position: absolute; top: 180px; right: 100px; width: 400px; height: 200px;" viewBox="0 0 100 50">
+          <path d="M20 30 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#4a5568" opacity="0.9" />
+        </svg>
       </div>
       
       <!-- Grass Forefront -->
@@ -117,7 +125,7 @@
       
       <div class="grid-lines"></div>
       <div id="chart-container">
-        <svg id="chart-svg" width="1920" height="600" viewBox="0 0 1920 600"></svg>
+        <svg id="chart-svg" width="1920" height="600" viewBox="0 0 1920 600" style="position: absolute; bottom: 0; left: 0;"></svg>
       </div>
       
       <div id="house-container">
@@ -389,16 +397,12 @@
           .attr("class", "chart-line")
           .attr("d", line);
 
-        const totalLength = path.node().getTotalLength();
-        path.attr("stroke-dasharray", totalLength + " " + totalLength)
-          .attr("stroke-dashoffset", totalLength);
-
         const timeOffset = 1;
         const availableDuration = yearData.length * 2;
         
         // Animation
-        tl.to(path.node(), {
-          attr: { "stroke-dashoffset": 0 },
+        tl.to("#chart-container", {
+          width: "100%",
           duration: availableDuration,
           ease: "none"
         }, timeOffset);
