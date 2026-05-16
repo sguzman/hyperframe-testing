@@ -65,11 +65,11 @@ Object.keys(groupedData).forEach(year => {
   let accumulatedUp = 0;
   let accumulatedDown = 0;
   const lenUp = 146.07;
-  const lenDown = 179.46;
+  const lenDown = 177.05;
 
   // Prepend intro audio based on first chunk
   const firstUp = chunks.length > 0 ? chunks[0].isUp : true;
-  const introSrc = firstUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3';
+  const introSrc = firstUp ? 'Morning_Jumpstart.mp3' : 'Concrete_Pulse.mp3';
   let introStart = firstUp ? accumulatedUp : accumulatedDown;
   if (firstUp) accumulatedUp += timeOffset;
   else accumulatedDown += timeOffset;
@@ -78,7 +78,7 @@ Object.keys(groupedData).forEach(year => {
 
   chunks.forEach((chunk, idx) => {
     const isUp = chunk.isUp;
-    const src = isUp ? "Morning_Jumpstart.mp3" : "Receipt_from_.mp3";
+    const src = isUp ? "Morning_Jumpstart.mp3" : "Concrete_Pulse.mp3";
     const duration = chunk.end - chunk.start;
     
     // ensure minimum duration for ffmpeg (e.g., 0.01s)
@@ -95,7 +95,7 @@ Object.keys(groupedData).forEach(year => {
   // Outro
   const lastUp = chunks.length > 0 ? chunks[chunks.length - 1].isUp : true;
   const outroDuration = totalDuration - (timeOffset + availableDuration);
-  const outroSrc = lastUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3';
+  const outroSrc = lastUp ? 'Morning_Jumpstart.mp3' : 'Concrete_Pulse.mp3';
   let outroStart = lastUp ? accumulatedUp : accumulatedDown;
   
   audioHtml += `      <audio id="audio-outro" class="clip" src="../../assets/audio/${outroSrc}" data-start="${timeOffset + availableDuration}" data-duration="${outroDuration}" data-media-start="${(outroStart % (lastUp ? lenUp : lenDown)).toFixed(3)}"></audio>\n`;
