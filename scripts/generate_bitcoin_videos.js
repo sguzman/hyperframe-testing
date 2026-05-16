@@ -45,38 +45,60 @@ Object.keys(groupedData).forEach(year => {
     const price = d[1];
     const prevPrice = i > 0 ? yearData[i-1][1] : price;
     const isUp = price >= prevPrice;
-    const time = timeOffset + (i / yearData.length) * availableDuration;
+    const startTime = timeOffset + (i / yearData.length) * availableDuration;
+    const endTime = timeOffset + ((i + 1) / yearData.length) * availableDuration;
     
     if (!currentChunk) {
-      currentChunk = { isUp, start: time, end: time };
+      currentChunk = { isUp, start: startTime, end: endTime };
     } else if (currentChunk.isUp === isUp) {
-      currentChunk.end = time;
+      currentChunk.end = endTime;
     } else {
       chunks.push(currentChunk);
-      currentChunk = { isUp, start: time, end: time };
+      currentChunk = { isUp, start: startTime, end: endTime };
     }
   });
   if (currentChunk) {
-    currentChunk.end = timeOffset + availableDuration; // end of data
     chunks.push(currentChunk);
   }
 
+  // Audio logic fixes: accumulate play time for each track to avoid seeking past EOF
+  let accumulatedUp = 0;
+  let accumulatedDown = 0;
+  const lenUp = 146.07;
+  const lenDown = 179.46;
+
   // Prepend intro audio based on first chunk
   const firstUp = chunks.length > 0 ? chunks[0].isUp : true;
-  audioHtml += `<audio id="audio-intro" class="clip" src="../../assets/audio/${firstUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3'}" data-start="0" data-duration="${timeOffset}" data-media-start="0"></audio>\n`;
+  const introSrc = firstUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3';
+  let introStart = firstUp ? accumulatedUp : accumulatedDown;
+  if (firstUp) accumulatedUp += timeOffset;
+  else accumulatedDown += timeOffset;
+
+  audioHtml += `<audio id="audio-intro" class="clip" src="../../assets/audio/${introSrc}" data-start="0" data-duration="${timeOffset}" data-media-start="${(introStart % (firstUp ? lenUp : lenDown)).toFixed(3)}"></audio>\n`;
 
   chunks.forEach((chunk, idx) => {
-    const src = chunk.isUp ? "Morning_Jumpstart.mp3" : "Receipt_from_.mp3";
+    const isUp = chunk.isUp;
+    const src = isUp ? "Morning_Jumpstart.mp3" : "Receipt_from_.mp3";
     const duration = chunk.end - chunk.start;
+    
     // ensure minimum duration for ffmpeg (e.g., 0.01s)
     if (duration > 0) {
-      audioHtml += `      <audio id="audio-chunk-${idx}" class="clip" src="../../assets/audio/${src}" data-start="${chunk.start.toFixed(3)}" data-duration="${duration.toFixed(3)}" data-media-start="${chunk.start.toFixed(3)}"></audio>\n`;
+      let mediaStart = isUp ? accumulatedUp : accumulatedDown;
+      if (isUp) accumulatedUp += duration;
+      else accumulatedDown += duration;
+      
+      const wrappedStart = mediaStart % (isUp ? lenUp : lenDown);
+      audioHtml += `      <audio id="audio-chunk-${idx}" class="clip" src="../../assets/audio/${src}" data-start="${chunk.start.toFixed(3)}" data-duration="${duration.toFixed(3)}" data-media-start="${wrappedStart.toFixed(3)}"></audio>\n`;
     }
   });
 
   // Outro
   const lastUp = chunks.length > 0 ? chunks[chunks.length - 1].isUp : true;
-  audioHtml += `      <audio id="audio-outro" class="clip" src="../../assets/audio/${lastUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3'}" data-start="${timeOffset + availableDuration}" data-duration="${totalDuration - (timeOffset + availableDuration)}" data-media-start="${timeOffset + availableDuration}"></audio>\n`;
+  const outroDuration = totalDuration - (timeOffset + availableDuration);
+  const outroSrc = lastUp ? 'Morning_Jumpstart.mp3' : 'Receipt_from_.mp3';
+  let outroStart = lastUp ? accumulatedUp : accumulatedDown;
+  
+  audioHtml += `      <audio id="audio-outro" class="clip" src="../../assets/audio/${outroSrc}" data-start="${timeOffset + availableDuration}" data-duration="${outroDuration}" data-media-start="${(outroStart % (lastUp ? lenUp : lenDown)).toFixed(3)}"></audio>\n`;
 
   // Inject data into template
   const dataString = JSON.stringify(yearData);
