@@ -54,7 +54,7 @@
       }
       
       #house-container {
-        position: absolute; bottom: 80px; left: 50%;
+        position: absolute; bottom: 0; left: 50%;
         width: 800px; height: 800px;
         z-index: 1;
         opacity: 0.5;
@@ -109,14 +109,18 @@
       </div>
 
       <div id="rainy-elements" style="position: absolute; inset: 0; z-index: -1; opacity: 0;">
-        <div style="position: absolute; inset: 0; background: repeating-linear-gradient(15deg, transparent, transparent 10px, rgba(255,255,255,0.15) 11px, rgba(255,255,255,0.15) 13px);"></div>
+        <div id="rain-gradient" style="position: absolute; inset: -50%; background: repeating-linear-gradient(15deg, transparent, transparent 15px, rgba(150,200,255,0.4) 16px, rgba(150,200,255,0.4) 18px); background-size: 100px 100px;"></div>
         <!-- Dark Clouds -->
-        <svg style="position: absolute; top: 100px; left: 150px; width: 500px; height: 250px;" viewBox="0 0 100 50">
+        <svg style="position: absolute; top: 50px; left: 100px; width: 600px; height: 300px;" viewBox="0 0 100 50">
           <path d="M20 30 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#4a5568" opacity="0.9" />
-          <path d="M40 35 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#2d3748" opacity="0.9" />
+          <path d="M40 35 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#2d3748" opacity="0.95" />
         </svg>
-        <svg style="position: absolute; top: 180px; right: 100px; width: 400px; height: 200px;" viewBox="0 0 100 50">
+        <svg style="position: absolute; top: 120px; right: 50px; width: 500px; height: 250px;" viewBox="0 0 100 50">
           <path d="M20 30 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#4a5568" opacity="0.9" />
+          <path d="M35 25 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#1a202c" opacity="0.8" />
+        </svg>
+        <svg style="position: absolute; top: -20px; left: 700px; width: 450px; height: 220px;" viewBox="0 0 100 50">
+          <path d="M20 30 a 15 15 0 0 1 20 -15 a 15 15 0 0 1 30 0 a 15 15 0 0 1 -20 15 Z" fill="#2d3748" opacity="0.85" />
         </svg>
       </div>
       
@@ -177,7 +181,7 @@
         const width = 1920;
         const height = 600;
         
-        const x = d3.scaleLinear().domain([0, yearData.length - 1]).range([0, width]);
+        const x = d3.scaleLinear().domain([0, yearData.length]).range([0, width]);
         const y = d3.scaleLinear()
           .domain([d3.min(yearData, d => d[1]) * 0.9, d3.max(yearData, d => d[1]) * 1.1])
           .range([height, 50]);
@@ -197,6 +201,12 @@
         // Animation
         tl.to("#chart-container", {
           width: "100%",
+          duration: availableDuration,
+          ease: "none"
+        }, timeOffset);
+        
+        tl.to("#rain-gradient", {
+          backgroundPosition: "-2000px 4000px",
           duration: availableDuration,
           ease: "none"
         }, timeOffset);
