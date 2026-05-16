@@ -31,13 +31,15 @@ Object.keys(groupedData).forEach(year => {
   }
 
   // Generate dynamic audio tags based on price changes
-  const totalDuration = 15;
+  const yearData = groupedData[year];
+  
+  // Generate dynamic audio tags based on price changes
   const timeOffset = 1;
-  const availableDuration = 12; // Data spans 1 to 13
+  const availableDuration = yearData.length * 2;
+  const totalDuration = timeOffset + availableDuration + 2;
   let audioHtml = '';
   let chunks = [];
   let currentChunk = null;
-  const yearData = groupedData[year];
 
   yearData.forEach((d, i) => {
     const price = d[1];
@@ -89,7 +91,7 @@ Object.keys(groupedData).forEach(year => {
   const meta = {
     id: `bitcoin-${year}`,
     title: `Bitcoin History - ${year}`,
-    duration: 15,
+    duration: totalDuration,
     width: 1920,
     height: 1080
   };

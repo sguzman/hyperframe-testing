@@ -187,16 +187,19 @@
         path.attr("stroke-dasharray", totalLength + " " + totalLength)
           .attr("stroke-dashoffset", totalLength);
 
+        const timeOffset = 1;
+        const availableDuration = yearData.length * 2;
+        
         // Animation
         tl.to(path.node(), {
           attr: { "stroke-dashoffset": 0 },
-          duration: 12,
+          duration: availableDuration,
           ease: "none"
-        }, 1);
+        }, timeOffset);
 
         // Price and Soyjak update
         yearData.forEach((d, i) => {
-          const time = 1 + (i / yearData.length) * 12;
+          const time = timeOffset + (i / yearData.length) * availableDuration;
           const date = d[0];
           const price = d[1];
           const prevPrice = i > 0 ? yearData[i-1][1] : price;
@@ -228,10 +231,10 @@
 
       // Character bounce
       const cycleDuration = 0.6;
-      const totalDuration = 15;
+      const computedTotalDuration = (typeof yearData !== 'undefined' && yearData.length > 0) ? (1 + yearData.length * 2 + 2) : 15;
       tl.to("#soyjak-container", {
         y: -30,
-        repeat: Math.floor(totalDuration / cycleDuration) - 1,
+        repeat: Math.floor(computedTotalDuration / cycleDuration) - 1,
         yoyo: true,
         duration: cycleDuration,
         ease: "sine.inOut"
