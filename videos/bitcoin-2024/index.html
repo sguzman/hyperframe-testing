@@ -62,7 +62,7 @@
       
       #soyjak-container {
         position: absolute; bottom: 100px; left: 50%;
-        width: 500px; height: 500px;
+        width: 350px; height: 350px;
         z-index: 2;
       }
       
@@ -112,6 +112,9 @@
         <div style="position: absolute; inset: 0; background: repeating-linear-gradient(15deg, transparent, transparent 10px, rgba(255,255,255,0.15) 11px, rgba(255,255,255,0.15) 13px);"></div>
       </div>
       
+      <!-- Grass Forefront -->
+      <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; background: #228B22; z-index: 0;"></div>
+      
       <div class="grid-lines"></div>
       <div id="chart-container">
         <svg id="chart-svg" width="1920" height="600" viewBox="0 0 1920 600"></svg>
@@ -122,11 +125,19 @@
           <path d="M10 90 L10 40 L50 10 L90 40 L90 90 Z" fill="#d2b48c" stroke="#333" stroke-width="2"/>
           <path d="M10 40 L50 10 L90 40" fill="#654321" stroke="#333" stroke-width="2"/>
           <rect x="40" y="60" width="20" height="30" fill="#8b4513" stroke="#333" stroke-width="2"/>
+          <!-- Window -->
+          <rect x="15" y="55" width="15" height="15" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+          <line x1="22.5" y1="55" x2="22.5" y2="70" stroke="#333" stroke-width="2"/>
+          <line x1="15" y1="62.5" x2="30" y2="62.5" stroke="#333" stroke-width="2"/>
+          <!-- Plant pot -->
+          <polygon points="70,80 80,80 78,90 72,90" fill="#cd853f" stroke="#333" stroke-width="1"/>
+          <path d="M75 80 Q70 70 75 65 Q80 70 75 80" fill="#228B22" stroke="#333" stroke-width="1"/>
         </svg>
       </div>
       
       <div id="soyjak-container">
-        <img id="soyjak-img" src="../../assets/memes/happy-soyjak.png" />
+        <img id="soyjak-happy" src="../../assets/memes/happy-soyjak.png" style="position: absolute; top: 0; left: 0;" />
+        <img id="soyjak-sad" src="../../assets/memes/west-has-fallen.png" style="position: absolute; top: 0; left: 0; opacity: 0;" />
       </div>
       
       <div class="year-display" id="year-text">YEAR</div>
@@ -136,20 +147,108 @@
         <div class="return-display" id="return-text">0.00%</div>
       </div>
 
-      <audio id="audio-happy" src="../../assets/audio/Morning_Jumpstart.mp3" loop autoplay></audio>
-      <audio id="audio-sad" src="../../assets/audio/Receipt_from_.mp3" loop autoplay></audio>
+      <audio id="audio-intro" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="0" data-duration="1" data-media-start="0"></audio>
+      <audio id="audio-chunk-0" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.000" data-duration="0.034" data-media-start="1.000"></audio>
+      <audio id="audio-chunk-4" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.170" data-duration="0.102" data-media-start="1.170"></audio>
+      <audio id="audio-chunk-5" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="1.306" data-duration="0.102" data-media-start="1.306"></audio>
+      <audio id="audio-chunk-9" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="1.544" data-duration="0.068" data-media-start="1.544"></audio>
+      <audio id="audio-chunk-10" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.646" data-duration="0.034" data-media-start="1.646"></audio>
+      <audio id="audio-chunk-11" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="1.714" data-duration="0.034" data-media-start="1.714"></audio>
+      <audio id="audio-chunk-16" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.918" data-duration="0.102" data-media-start="1.918"></audio>
+      <audio id="audio-chunk-17" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="2.054" data-duration="0.034" data-media-start="2.054"></audio>
+      <audio id="audio-chunk-19" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="2.156" data-duration="0.034" data-media-start="2.156"></audio>
+      <audio id="audio-chunk-20" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="2.224" data-duration="0.102" data-media-start="2.224"></audio>
+      <audio id="audio-chunk-22" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="2.394" data-duration="0.034" data-media-start="2.394"></audio>
+      <audio id="audio-chunk-24" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="2.496" data-duration="0.034" data-media-start="2.496"></audio>
+      <audio id="audio-chunk-25" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="2.564" data-duration="0.034" data-media-start="2.564"></audio>
+      <audio id="audio-chunk-26" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="2.632" data-duration="0.034" data-media-start="2.632"></audio>
+      <audio id="audio-chunk-27" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="2.700" data-duration="0.034" data-media-start="2.700"></audio>
+      <audio id="audio-chunk-32" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="2.904" data-duration="0.136" data-media-start="2.904"></audio>
+      <audio id="audio-chunk-34" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="3.108" data-duration="0.034" data-media-start="3.108"></audio>
+      <audio id="audio-chunk-36" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="3.210" data-duration="0.170" data-media-start="3.210"></audio>
+      <audio id="audio-chunk-39" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="3.482" data-duration="0.034" data-media-start="3.482"></audio>
+      <audio id="audio-chunk-41" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="3.584" data-duration="0.102" data-media-start="3.584"></audio>
+      <audio id="audio-chunk-47" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="3.890" data-duration="0.034" data-media-start="3.890"></audio>
+      <audio id="audio-chunk-51" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.059" data-duration="0.034" data-media-start="4.059"></audio>
+      <audio id="audio-chunk-52" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.127" data-duration="0.034" data-media-start="4.127"></audio>
+      <audio id="audio-chunk-54" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.229" data-duration="0.068" data-media-start="4.229"></audio>
+      <audio id="audio-chunk-56" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.365" data-duration="0.034" data-media-start="4.365"></audio>
+      <audio id="audio-chunk-57" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.433" data-duration="0.068" data-media-start="4.433"></audio>
+      <audio id="audio-chunk-59" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.569" data-duration="0.034" data-media-start="4.569"></audio>
+      <audio id="audio-chunk-60" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.637" data-duration="0.068" data-media-start="4.637"></audio>
+      <audio id="audio-chunk-62" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.773" data-duration="0.034" data-media-start="4.773"></audio>
+      <audio id="audio-chunk-63" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.841" data-duration="0.204" data-media-start="4.841"></audio>
+      <audio id="audio-chunk-64" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="5.079" data-duration="0.102" data-media-start="5.079"></audio>
+      <audio id="audio-chunk-70" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="5.385" data-duration="0.068" data-media-start="5.385"></audio>
+      <audio id="audio-chunk-75" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="5.623" data-duration="0.034" data-media-start="5.623"></audio>
+      <audio id="audio-chunk-80" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="5.827" data-duration="0.034" data-media-start="5.827"></audio>
+      <audio id="audio-chunk-83" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="5.963" data-duration="0.034" data-media-start="5.963"></audio>
+      <audio id="audio-chunk-88" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.167" data-duration="0.068" data-media-start="6.167"></audio>
+      <audio id="audio-chunk-89" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="6.269" data-duration="0.034" data-media-start="6.269"></audio>
+      <audio id="audio-chunk-90" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.337" data-duration="0.034" data-media-start="6.337"></audio>
+      <audio id="audio-chunk-93" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="6.473" data-duration="0.034" data-media-start="6.473"></audio>
+      <audio id="audio-chunk-94" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.541" data-duration="0.068" data-media-start="6.541"></audio>
+      <audio id="audio-chunk-96" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.677" data-duration="0.034" data-media-start="6.677"></audio>
+      <audio id="audio-chunk-99" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="6.813" data-duration="0.034" data-media-start="6.813"></audio>
+      <audio id="audio-chunk-104" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="7.017" data-duration="0.068" data-media-start="7.017"></audio>
+      <audio id="audio-chunk-105" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="7.119" data-duration="0.102" data-media-start="7.119"></audio>
+      <audio id="audio-chunk-107" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="7.289" data-duration="0.034" data-media-start="7.289"></audio>
+      <audio id="audio-chunk-110" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="7.425" data-duration="0.102" data-media-start="7.425"></audio>
+      <audio id="audio-chunk-111" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="7.561" data-duration="0.034" data-media-start="7.561"></audio>
+      <audio id="audio-chunk-112" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="7.629" data-duration="0.102" data-media-start="7.629"></audio>
+      <audio id="audio-chunk-116" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="7.867" data-duration="0.034" data-media-start="7.867"></audio>
+      <audio id="audio-chunk-117" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="7.935" data-duration="0.238" data-media-start="7.935"></audio>
+      <audio id="audio-chunk-120" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="8.275" data-duration="0.034" data-media-start="8.275"></audio>
+      <audio id="audio-chunk-121" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="8.343" data-duration="0.034" data-media-start="8.343"></audio>
+      <audio id="audio-chunk-123" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="8.445" data-duration="0.034" data-media-start="8.445"></audio>
+      <audio id="audio-chunk-128" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="8.649" data-duration="0.034" data-media-start="8.649"></audio>
+      <audio id="audio-chunk-130" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="8.751" data-duration="0.034" data-media-start="8.751"></audio>
+      <audio id="audio-chunk-131" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="8.819" data-duration="0.102" data-media-start="8.819"></audio>
+      <audio id="audio-chunk-139" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="9.193" data-duration="0.034" data-media-start="9.193"></audio>
+      <audio id="audio-chunk-140" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.261" data-duration="0.068" data-media-start="9.261"></audio>
+      <audio id="audio-chunk-142" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.397" data-duration="0.034" data-media-start="9.397"></audio>
+      <audio id="audio-chunk-150" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.703" data-duration="0.034" data-media-start="9.703"></audio>
+      <audio id="audio-chunk-152" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.805" data-duration="0.034" data-media-start="9.805"></audio>
+      <audio id="audio-chunk-153" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="9.873" data-duration="0.068" data-media-start="9.873"></audio>
+      <audio id="audio-chunk-156" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="10.042" data-duration="0.034" data-media-start="10.042"></audio>
+      <audio id="audio-chunk-157" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="10.110" data-duration="0.068" data-media-start="10.110"></audio>
+      <audio id="audio-chunk-158" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="10.212" data-duration="0.034" data-media-start="10.212"></audio>
+      <audio id="audio-chunk-160" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="10.314" data-duration="0.068" data-media-start="10.314"></audio>
+      <audio id="audio-chunk-170" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="10.722" data-duration="0.102" data-media-start="10.722"></audio>
+      <audio id="audio-chunk-171" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="10.858" data-duration="0.068" data-media-start="10.858"></audio>
+      <audio id="audio-chunk-173" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="10.994" data-duration="0.034" data-media-start="10.994"></audio>
+      <audio id="audio-chunk-174" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.062" data-duration="0.068" data-media-start="11.062"></audio>
+      <audio id="audio-chunk-175" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="11.164" data-duration="0.034" data-media-start="11.164"></audio>
+      <audio id="audio-chunk-176" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.232" data-duration="0.102" data-media-start="11.232"></audio>
+      <audio id="audio-chunk-178" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.402" data-duration="0.034" data-media-start="11.402"></audio>
+      <audio id="audio-chunk-180" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.504" data-duration="0.136" data-media-start="11.504"></audio>
+      <audio id="audio-chunk-181" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="11.674" data-duration="0.102" data-media-start="11.674"></audio>
+      <audio id="audio-chunk-187" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="11.980" data-duration="0.034" data-media-start="11.980"></audio>
+      <audio id="audio-chunk-188" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.048" data-duration="0.068" data-media-start="12.048"></audio>
+      <audio id="audio-chunk-189" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.150" data-duration="0.068" data-media-start="12.150"></audio>
+      <audio id="audio-chunk-190" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.252" data-duration="0.034" data-media-start="12.252"></audio>
+      <audio id="audio-chunk-194" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.422" data-duration="0.068" data-media-start="12.422"></audio>
+      <audio id="audio-chunk-195" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.524" data-duration="0.034" data-media-start="12.524"></audio>
+      <audio id="audio-chunk-196" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.592" data-duration="0.034" data-media-start="12.592"></audio>
+      <audio id="audio-chunk-197" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.660" data-duration="0.034" data-media-start="12.660"></audio>
+      <audio id="audio-chunk-198" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.728" data-duration="0.034" data-media-start="12.728"></audio>
+      <audio id="audio-chunk-199" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.796" data-duration="0.034" data-media-start="12.796"></audio>
+      <audio id="audio-chunk-203" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.966" data-duration="0.034" data-media-start="12.966"></audio>
+      <audio id="audio-outro" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="13" data-duration="2" data-media-start="13"></audio>
+
     </div>
 
     <script>
       // Data will be injected by the generator script
-      // const yearData = [[date, price], ...];
-      // const year = "2024";
+      const yearData = [["2024-01-01",42940.6875],["2024-01-02",45073.4375],["2024-01-03",42929.52734375],["2024-01-04",44128.109375],["2024-01-05",43599.171875],["2024-01-06",43957.98828125],["2024-01-07",44092.046875],["2024-01-08",45972.26953125],["2024-01-09",46606.93359375],["2024-01-10",46484.87109375],["2024-01-11",46425.33203125],["2024-01-12",43825.953125],["2024-01-13",42824.55078125],["2024-01-14",42991.5234375],["2024-01-15",42760.40234375],["2024-01-16",43095.94140625],["2024-01-17",42381.2109375],["2024-01-18",41481.1171875],["2024-01-19",41135.0546875],["2024-01-20",41575.30078125],["2024-01-21",41636.14453125],["2024-01-22",40590.06640625],["2024-01-23",39473.94140625],["2024-01-24",40052.046875],["2024-01-25",39859.609375],["2024-01-26",41960.69140625],["2024-01-27",41756.91015625],["2024-01-28",42146.37890625],["2024-01-29",43071.609375],["2024-01-30",43410.328125],["2024-01-31",43574.87890625],["2024-02-01",42843.7578125],["2024-02-02",42810.43359375],["2024-02-03",43225.265625],["2024-02-04",42919.89453125],["2024-02-05",42568.3671875],["2024-02-06",43214.59375],["2024-02-07",43435.67578125],["2024-02-08",45094.24609375],["2024-02-09",47767.66796875],["2024-02-10",47259.18359375],["2024-02-11",48226.9453125],["2024-02-12",49895.57421875],["2024-02-13",49105.93359375],["2024-02-14",51668.359375],["2024-02-15",52024.59375],["2024-02-16",51941.125],["2024-02-17",51170.078125],["2024-02-18",51791.68359375],["2024-02-19",52132.21484375],["2024-02-20",51320.828125],["2024-02-21",50991.43359375],["2024-02-22",51606.8203125],["2024-02-23",51079.0390625],["2024-02-24",51604.1328125],["2024-02-25",51556.12109375],["2024-02-26",53588.53125],["2024-02-27",56799.36328125],["2024-02-28",61015.125],["2024-02-29",61433.6328125],["2024-03-01",61995.234375],["2024-03-02",61876.8671875],["2024-03-03",62673.765625],["2024-03-04",66884.5],["2024-03-05",65229.7578125],["2024-03-06",67147.1328125],["2024-03-07",67614.4921875],["2024-03-08",68324.9765625],["2024-03-09",68391.484375],["2024-03-10",69551.828125],["2024-03-11",72362.859375],["2024-03-12",69967.5390625],["2024-03-13",73025.8984375],["2024-03-14",71135.2265625],["2024-03-15",67758.4453125],["2024-03-16",68191.3984375],["2024-03-17",68000.703125],["2024-03-18",66721.2421875],["2024-03-19",65227.265625],["2024-03-20",63130.2578125],["2024-03-21",66944.6640625],["2024-03-22",63698.78125],["2024-03-23",65611.5234375],["2024-03-24",64901.23046875],["2024-03-25",70538.875],["2024-03-26",69876.1875],["2024-03-27",69131.8671875],["2024-03-28",70680.6640625],["2024-03-30",70219.8359375],["2024-03-31",70490.1953125],["2024-04-01",68494.765625],["2024-04-02",65494.703125],["2024-04-03",66169.796875],["2024-04-04",67887.3515625],["2024-04-05",67859.4921875],["2024-04-06",68059.984375],["2024-04-07",69957.71875],["2024-04-08",71783.3125],["2024-04-09",68711.4453125],["2024-04-10",69297.8046875],["2024-04-11",70172.7265625],["2024-04-12",68209.703125],["2024-04-13",67196.296875],["2024-04-14",64535.9609375],["2024-04-15",64671.33203125],["2024-04-16",62679.96875],["2024-04-17",60424.4375],["2024-04-18",63432.234375],["2024-04-19",64232.0390625],["2024-04-20",64938.05078125],["2024-04-21",64659.5390625],["2024-04-22",66360.2265625],["2024-04-23",66730.078125],["2024-04-24",64807.88671875],["2024-04-25",64589.8828125],["2024-04-26",63599.72265625],["2024-04-27",63257.79296875],["2024-04-29",62739.96484375],["2024-04-30",60128.96875],["2024-05-01",57273.484375],["2024-05-02",59139.2890625],["2024-05-03",61787.17578125],["2024-05-04",63645.92578125],["2024-05-05",63946.6953125],["2024-05-06",63003.6875],["2024-05-07",63153.67578125],["2024-05-08",62283.98828125],["2024-05-09",62309.7265625],["2024-05-10",60602.7109375],["2024-05-11",61096.0859375],["2024-05-12",61412.5234375],["2024-05-13",63021.01953125],["2024-05-14",61551.984375],["2024-05-15",66328.8828125],["2024-05-16",65227.6953125],["2024-05-17",66932.09375],["2024-05-18",66858.3671875],["2024-05-19",66372.09375],["2024-05-20",69783.5703125],["2024-05-21",69368.1484375],["2024-05-22",69682.2421875],["2024-05-23",67563.7421875],["2024-05-24",68930.1875],["2024-05-25",69123.328125],["2024-05-26",68848.0234375],["2024-05-27",69876.8046875],["2024-05-28",68205.578125],["2024-05-29",67178.8125],["2024-05-30",68951.75],["2024-05-31",67501.5625],["2024-06-01",67664.8671875],["2024-06-02",67634.46875],["2024-06-03",69076.765625],["2024-06-04",70440.8828125],["2024-06-05",70985.484375],["2024-06-06",70862.125],["2024-06-07",69222.9140625],["2024-06-08",69433.1484375],["2024-06-10",69689.328125],["2024-06-11",67569.3046875],["2024-06-12",68389.1484375],["2024-06-13",66671.3984375],["2024-06-14",65539.53125],["2024-06-15",66155.8125],["2024-06-16",66487.390625],["2024-06-17",66783.1328125],["2024-06-18",64400.98046875],["2024-06-19",64857.9765625],["2024-06-20",64989.80859375],["2024-06-21",64043.8046875],["2024-06-22",64227.51171875],["2024-06-23",64082.82421875],["2024-06-24",60065.65234375],["2024-06-25",61901.5703125],["2024-06-26",60879.49609375],["2024-06-27",61441.68359375],["2024-06-28",60208.03515625],["2024-06-29",60846.1328125],["2024-06-30",61899.76171875],["2024-07-01",63318.765625],["2024-07-02",61982.8828125],["2024-07-03",59857.26953125],["2024-07-04",58524.64453125],["2024-07-05",56601.27734375],["2024-07-06",57902.72265625],["2024-07-07",57069.1875],["2024-07-08",56284.0234375],["2024-07-09",57758.28515625],["2024-07-10",57506.7265625],["2024-07-11",57569.85546875],["2024-07-13",58651.9453125],["2024-07-15",63589.90234375],["2024-07-16",64957.01953125],["2024-07-17",64687.796875],["2024-07-18",63560.08984375],["2024-07-19",67099.84375],["2024-07-20",67240.6328125],["2024-07-21",67332.859375],["2024-07-22",67845.8125],["2024-07-23",65809.21875],["2024-07-24",66033.3828125],["2024-07-25",64926.20703125],["2024-07-26",67819.125],["2024-07-27",68417.3984375],["2024-07-28",68150.7734375],["2024-07-29",67359.1171875],["2024-07-30",65802.0390625],["2024-07-31",65672.640625],["2024-08-01",63235.17578125],["2024-08-02",62786.546875],["2024-08-03",60092.9140625],["2024-08-05",53482.25390625],["2024-08-06",56742.671875],["2024-08-07",54951.15234375],["2024-08-09",60628.9765625],["2024-08-10",61112.765625],["2024-08-11",59702.3046875],["2024-08-12",59182.46875],["2024-08-13",60699.35546875],["2024-08-14",59000],["2024-08-15",56866.80859375],["2024-08-16",59729.7109375],["2024-08-17",59458.49609375],["2024-08-18",59707.125],["2024-08-19",58937.28515625],["2024-08-20",59393.47265625],["2024-08-21",61071.96875],["2024-08-22",60242.52734375],["2024-08-23",63630.55078125],["2024-08-24",64365.14453125],["2024-08-25",64196.0703125],["2024-08-26",63536.140625],["2024-08-27",62088.625],["2024-08-28",59253.1171875],["2024-08-29",59606.96484375],["2024-08-30",58760.296875],["2024-08-31",58882.8203125],["2024-09-01",58302.47265625],["2024-09-02",58498.37109375],["2024-09-03",57851.02734375],["2024-09-04",57885.52734375],["2024-09-05",56269.05859375],["2024-09-06",53358.859375],["2024-09-08",54377.83984375],["2024-09-09",56968.171875],["2024-09-10",57799.3515625],["2024-09-11",57632.84765625],["2024-09-12",58277.1484375],["2024-09-13",59941.95703125],["2024-09-15",59879.734375],["2024-09-17",60357.27734375],["2024-09-18",60334.81640625],["2024-09-19",63356.6796875],["2024-09-20",63006.046875],["2024-09-21",63234.55078125],["2024-09-22",62966.50390625],["2024-09-23",63341.3046875],["2024-09-24",63842.65625],["2024-09-25",63317.51171875],["2024-09-26",65106.6171875],["2024-09-29",65985.1015625],["2024-09-30",63361.99609375],["2024-10-01",61985.796875],["2024-10-02",60217.2265625],["2024-10-04",62336.3671875],["2024-10-05",61868.87109375],["2024-10-06",62808.7734375],["2024-10-07",63290.62109375],["2024-10-08",62284.96484375],["2024-10-09",61060.35546875],["2024-10-10",59574],["2024-10-11",62877.1015625],["2024-10-12",62991.4296875],["2024-10-13",62654.0234375],["2024-10-14",65971.5078125],["2024-10-15",66614.375],["2024-10-16",67787.9609375],["2024-10-17",66908.25],["2024-10-18",68703.0390625],["2024-10-19",68197.40625],["2024-10-20",68490.640625],["2024-10-21",67487.21875],["2024-10-22",67499.0078125],["2024-10-23",66189.4609375],["2024-10-24",68149.2265625],["2024-10-25",66865.6171875],["2024-10-26",67019.65625],["2024-10-27",67717.7734375],["2024-10-28",69677.25],["2024-10-29",72797.734375],["2024-10-30",71888.8984375],["2024-10-31",70293.7421875],["2024-11-01",69134.046875],["2024-11-02",69475.1484375],["2024-11-03",68815.40625],["2024-11-04",67499.21875],["2024-11-05",69585.796875],["2024-11-06",75726.25],["2024-11-07",76708.78125],["2024-11-08",76624.875],["2024-11-09",76356.09375],["2024-11-10",79428.8515625],["2024-11-11",86941.0234375],["2024-11-12",89593.40625],["2024-11-13",91093.6796875],["2024-11-14",88115.4765625],["2024-11-15",90917.1640625],["2024-11-16",90920.46875],["2024-11-17",89732.4453125],["2024-11-18",91990.8359375],["2024-11-19",93128.8359375],["2024-11-20",94377.8671875],["2024-11-21",98483.109375],["2024-11-22",99273.25],["2024-11-23",97560.5625],["2024-11-24",96743.09375],["2024-11-25",95297.8125],["2024-11-26",90803.15625],["2024-11-27",97071.0390625],["2024-11-28",94729.71875],["2024-11-29",97689.7890625],["2024-11-30",96956.71875],["2024-12-01",96975.03125],["2024-12-02",95841.6796875],["2024-12-03",95672.1328125],["2024-12-04",98613.7265625],["2024-12-05",98782.765625],["2024-12-06",101916.15625],["2024-12-07",100348.8359375],["2024-12-08",99891.7890625],["2024-12-09",95042.921875],["2024-12-10",96397.0390625],["2024-12-11",101401.8203125],["2024-12-12",100244.609375],["2024-12-13",101714.1796875],["2024-12-14",101043.140625],["2024-12-15",103171.7421875],["2024-12-16",106154.3671875],["2024-12-17",106716.8359375],["2024-12-18",101501.3828125],["2024-12-19",95813.921875],["2024-12-20",96682.625],["2024-12-21",97589.6875],["2024-12-22",95038.0078125],["2024-12-23",92872.5546875],["2024-12-24",97844.4140625],["2024-12-25",99095.546875],["2024-12-26",95408.6171875],["2024-12-27",94493.1875],["2024-12-28",94807.3984375],["2024-12-29",93220.109375],["2024-12-30",94408.3125],["2024-12-31",93758.78125]];
+      const year = "2024";
 
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
       document.getElementById('year-text').innerText = typeof year !== 'undefined' ? year : '2011';
       
+      // Initialize states
       gsap.set("#house-container", { xPercent: -50 });
       gsap.set("#soyjak-container", { xPercent: -50 });
 
@@ -177,7 +276,7 @@
           .attr("stroke-dashoffset", totalLength);
 
         // Animation
-        tl.to(path, {
+        tl.to(path.node(), {
           attr: { "stroke-dashoffset": 0 },
           duration: 12,
           ease: "none"
@@ -192,9 +291,13 @@
           const isUp = price >= prevPrice;
           const dailyReturn = prevPrice !== 0 ? ((price - prevPrice) / prevPrice) * 100 : 0;
           
+          let digits = 2;
+          if (price < 0.01) digits = 6;
+          else if (price < 1) digits = 4;
+          
           tl.set("#date-text", { innerText: date }, time);
           tl.set("#price-text", {
-            innerText: "$" + price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+            innerText: "$" + price.toLocaleString(undefined, {minimumFractionDigits: digits, maximumFractionDigits: digits}),
           }, time);
           
           tl.set("#return-text", {
@@ -206,12 +309,8 @@
           tl.set("#sunny-elements", { opacity: isUp ? 1 : 0 }, time);
           tl.set("#rainy-elements", { opacity: isUp ? 0 : 1 }, time);
 
-          tl.set("#soyjak-img", {
-            attr: { src: isUp ? "../../assets/memes/happy-soyjak.png" : "../../assets/memes/west-has-fallen.png" }
-          }, time);
-
-          tl.set("#audio-happy", { volume: isUp ? 1 : 0 }, time);
-          tl.set("#audio-sad", { volume: isUp ? 0 : 1 }, time);
+          tl.set("#soyjak-happy", { opacity: isUp ? 1 : 0 }, time);
+          tl.set("#soyjak-sad", { opacity: isUp ? 0 : 1 }, time);
         });
       }
 

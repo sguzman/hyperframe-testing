@@ -62,7 +62,7 @@
       
       #soyjak-container {
         position: absolute; bottom: 100px; left: 50%;
-        width: 500px; height: 500px;
+        width: 350px; height: 350px;
         z-index: 2;
       }
       
@@ -112,6 +112,9 @@
         <div style="position: absolute; inset: 0; background: repeating-linear-gradient(15deg, transparent, transparent 10px, rgba(255,255,255,0.15) 11px, rgba(255,255,255,0.15) 13px);"></div>
       </div>
       
+      <!-- Grass Forefront -->
+      <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; background: #228B22; z-index: 0;"></div>
+      
       <div class="grid-lines"></div>
       <div id="chart-container">
         <svg id="chart-svg" width="1920" height="600" viewBox="0 0 1920 600"></svg>
@@ -122,11 +125,19 @@
           <path d="M10 90 L10 40 L50 10 L90 40 L90 90 Z" fill="#d2b48c" stroke="#333" stroke-width="2"/>
           <path d="M10 40 L50 10 L90 40" fill="#654321" stroke="#333" stroke-width="2"/>
           <rect x="40" y="60" width="20" height="30" fill="#8b4513" stroke="#333" stroke-width="2"/>
+          <!-- Window -->
+          <rect x="15" y="55" width="15" height="15" fill="#87CEEB" stroke="#333" stroke-width="2"/>
+          <line x1="22.5" y1="55" x2="22.5" y2="70" stroke="#333" stroke-width="2"/>
+          <line x1="15" y1="62.5" x2="30" y2="62.5" stroke="#333" stroke-width="2"/>
+          <!-- Plant pot -->
+          <polygon points="70,80 80,80 78,90 72,90" fill="#cd853f" stroke="#333" stroke-width="1"/>
+          <path d="M75 80 Q70 70 75 65 Q80 70 75 80" fill="#228B22" stroke="#333" stroke-width="1"/>
         </svg>
       </div>
       
       <div id="soyjak-container">
-        <img id="soyjak-img" src="../../assets/memes/happy-soyjak.png" />
+        <img id="soyjak-happy" src="../../assets/memes/happy-soyjak.png" style="position: absolute; top: 0; left: 0;" />
+        <img id="soyjak-sad" src="../../assets/memes/west-has-fallen.png" style="position: absolute; top: 0; left: 0; opacity: 0;" />
       </div>
       
       <div class="year-display" id="year-text">YEAR</div>
@@ -136,20 +147,49 @@
         <div class="return-display" id="return-text">0.00%</div>
       </div>
 
-      <audio id="audio-happy" src="../../assets/audio/Morning_Jumpstart.mp3" loop autoplay></audio>
-      <audio id="audio-sad" src="../../assets/audio/Receipt_from_.mp3" loop autoplay></audio>
+      <audio id="audio-intro" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="0" data-duration="1" data-media-start="0"></audio>
+      <audio id="audio-chunk-1" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="1.132" data-duration="0.264" data-media-start="1.132"></audio>
+      <audio id="audio-chunk-2" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.527" data-duration="0.132" data-media-start="1.527"></audio>
+      <audio id="audio-chunk-4" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="1.923" data-duration="0.396" data-media-start="1.923"></audio>
+      <audio id="audio-chunk-10" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="3.110" data-duration="0.264" data-media-start="3.110"></audio>
+      <audio id="audio-chunk-11" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="3.505" data-duration="0.527" data-media-start="3.505"></audio>
+      <audio id="audio-chunk-13" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.297" data-duration="0.132" data-media-start="4.297"></audio>
+      <audio id="audio-chunk-14" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="4.560" data-duration="0.132" data-media-start="4.560"></audio>
+      <audio id="audio-chunk-15" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="4.824" data-duration="0.132" data-media-start="4.824"></audio>
+      <audio id="audio-chunk-16" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="5.088" data-duration="0.132" data-media-start="5.088"></audio>
+      <audio id="audio-chunk-17" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="5.352" data-duration="0.132" data-media-start="5.352"></audio>
+      <audio id="audio-chunk-19" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="5.747" data-duration="0.264" data-media-start="5.747"></audio>
+      <audio id="audio-chunk-20" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.143" data-duration="0.132" data-media-start="6.143"></audio>
+      <audio id="audio-chunk-21" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="6.407" data-duration="0.132" data-media-start="6.407"></audio>
+      <audio id="audio-chunk-22" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="6.670" data-duration="0.659" data-media-start="6.670"></audio>
+      <audio id="audio-chunk-24" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="7.593" data-duration="0.132" data-media-start="7.593"></audio>
+      <audio id="audio-chunk-25" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="7.857" data-duration="0.527" data-media-start="7.857"></audio>
+      <audio id="audio-chunk-26" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="8.516" data-duration="0.132" data-media-start="8.516"></audio>
+      <audio id="audio-chunk-30" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.176" data-duration="0.264" data-media-start="9.176"></audio>
+      <audio id="audio-chunk-31" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="9.571" data-duration="0.132" data-media-start="9.571"></audio>
+      <audio id="audio-chunk-32" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="9.835" data-duration="0.396" data-media-start="9.835"></audio>
+      <audio id="audio-chunk-34" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="10.495" data-duration="0.264" data-media-start="10.495"></audio>
+      <audio id="audio-chunk-35" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="10.890" data-duration="0.264" data-media-start="10.890"></audio>
+      <audio id="audio-chunk-36" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.286" data-duration="0.264" data-media-start="11.286"></audio>
+      <audio id="audio-chunk-37" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="11.681" data-duration="0.132" data-media-start="11.681"></audio>
+      <audio id="audio-chunk-38" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="11.945" data-duration="0.132" data-media-start="11.945"></audio>
+      <audio id="audio-chunk-42" class="clip" src="../../assets/audio/Morning_Jumpstart.mp3" data-start="12.604" data-duration="0.132" data-media-start="12.604"></audio>
+      <audio id="audio-chunk-43" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="12.868" data-duration="0.132" data-media-start="12.868"></audio>
+      <audio id="audio-outro" class="clip" src="../../assets/audio/Receipt_from_.mp3" data-start="13" data-duration="2" data-media-start="13"></audio>
+
     </div>
 
     <script>
       // Data will be injected by the generator script
-      // const yearData = [[date, price], ...];
-      // const year = "2011";
+      const yearData = [["2011-09-14",5.96999979019165],["2011-09-15",5.53000020980835],["2011-09-16",5.130000114440918],["2011-09-17",4.849999904632568],["2011-09-18",4.869999885559082],["2011-09-19",4.920000076293945],["2011-09-20",4.900000095367432],["2011-09-21",5.659999847412109],["2011-09-22",5.659999847412109],["2011-09-23",5.71999979019165],["2011-09-24",5.71999979019165],["2011-09-25",5.679999828338623],["2011-09-26",6.050000190734863],["2011-09-27",4.800000190734863],["2011-09-28",4.920000076293945],["2011-09-29",4.820000171661377],["2011-09-30",4.820000171661377],["2011-10-04",4.869999885559082],["2011-10-05",4.980000019073486],["2011-10-06",4.920000076293945],["2011-10-07",4.800000190734863],["2011-10-08",4.610000133514404],["2011-10-09",3.990000009536743],["2011-10-10",3.890000104904175],["2011-10-11",4.510000228881836],["2011-10-12",4.099999904632568],["2011-10-13",3.930000066757202],["2011-10-14",3.9700000286102295],["2011-10-15",4.050000190734863],["2011-10-18",3.9200000762939453],["2011-10-21",2.240000009536743],["2011-10-22",2.2699999809265137],["2011-10-25",2.9200000762939453],["2011-10-26",2.7200000286102295],["2011-10-27",2.690000057220459],["2011-10-29",4.199999809265137],["2011-10-30",3.950000047683716],["2011-10-31",3.5],["2011-11-01",3.299999952316284],["2011-11-02",3.3299999237060547],["2011-11-05",3.549999952316284],["2011-11-06",3],["2011-11-07",2.950000047683716],["2011-11-09",3.0799999237060547],["2011-11-10",3.299999952316284],["2011-11-11",3.299999952316284],["2011-11-12",3.299999952316284],["2011-11-13",3.3499999046325684],["2011-11-14",3.3499999046325684],["2011-11-15",2.4700000286102295],["2011-11-16",2.5],["2011-11-17",3],["2011-11-18",2.990000009536743],["2011-11-19",2.5],["2011-11-20",2.430000066757202],["2011-11-21",2.369999885559082],["2011-11-22",2.25],["2011-11-23",2.5899999141693115],["2011-11-25",3],["2011-11-26",2.75],["2011-11-27",2.7699999809265137],["2011-11-29",2.6600000858306885],["2011-11-30",2.7200000286102295],["2011-12-01",3.190000057220459],["2011-12-02",3.4200000762939453],["2011-12-03",3.0399999618530273],["2011-12-04",2.930000066757202],["2011-12-06",2.930000066757202],["2011-12-07",2.9800000190734863],["2011-12-08",3.299999952316284],["2011-12-09",3.299999952316284],["2011-12-11",3.200000047683716],["2011-12-12",3.2699999809265137],["2011-12-13",3.4800000190734863],["2011-12-14",3.559999942779541],["2011-12-15",3.4700000286102295],["2011-12-16",3.450000047683716],["2011-12-17",3.440000057220459],["2011-12-19",3.5],["2011-12-20",3.8499999046325684],["2011-12-21",4.550000190734863],["2011-12-22",4.380000114440918],["2011-12-23",4.170000076293945],["2011-12-24",4.21999979019165],["2011-12-25",4.329999923706055],["2011-12-26",4.269999980926514],["2011-12-27",4.329999923706055],["2011-12-28",4.289999961853027],["2011-12-29",4.300000190734863],["2011-12-30",4.5],["2011-12-31",4.210000038146973]];
+      const year = "2011";
 
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
       document.getElementById('year-text').innerText = typeof year !== 'undefined' ? year : '2011';
       
+      // Initialize states
       gsap.set("#house-container", { xPercent: -50 });
       gsap.set("#soyjak-container", { xPercent: -50 });
 
@@ -177,7 +217,7 @@
           .attr("stroke-dashoffset", totalLength);
 
         // Animation
-        tl.to(path, {
+        tl.to(path.node(), {
           attr: { "stroke-dashoffset": 0 },
           duration: 12,
           ease: "none"
@@ -192,9 +232,13 @@
           const isUp = price >= prevPrice;
           const dailyReturn = prevPrice !== 0 ? ((price - prevPrice) / prevPrice) * 100 : 0;
           
+          let digits = 2;
+          if (price < 0.01) digits = 6;
+          else if (price < 1) digits = 4;
+          
           tl.set("#date-text", { innerText: date }, time);
           tl.set("#price-text", {
-            innerText: "$" + price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+            innerText: "$" + price.toLocaleString(undefined, {minimumFractionDigits: digits, maximumFractionDigits: digits}),
           }, time);
           
           tl.set("#return-text", {
@@ -206,12 +250,8 @@
           tl.set("#sunny-elements", { opacity: isUp ? 1 : 0 }, time);
           tl.set("#rainy-elements", { opacity: isUp ? 0 : 1 }, time);
 
-          tl.set("#soyjak-img", {
-            attr: { src: isUp ? "../../assets/memes/happy-soyjak.png" : "../../assets/memes/west-has-fallen.png" }
-          }, time);
-
-          tl.set("#audio-happy", { volume: isUp ? 1 : 0 }, time);
-          tl.set("#audio-sad", { volume: isUp ? 0 : 1 }, time);
+          tl.set("#soyjak-happy", { opacity: isUp ? 1 : 0 }, time);
+          tl.set("#soyjak-sad", { opacity: isUp ? 0 : 1 }, time);
         });
       }
 
